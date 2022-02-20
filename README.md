@@ -45,8 +45,8 @@ We've used the following plugins
 
 ## Development
 
-- Visit the below contract on BSC Testnet https://testnet.bscscan.com/address/0x1c80c296627ae5CF01e4eD2dF69557c51AAE78b2#contracts 
-- Visit the ERC 1155 Protocol - Proof Token Contract at https://testnet.bscscan.com/address/0x713da13df3ea464610e2944dcee3cf1f5b86d923
+- Visit the ERC 721 contract on Oasis Emerald Testnet at https://testnet.bscscan.com/address/0x1c80c296627ae5CF01e4eD2dF69557c51AAE78b2#contracts 
+- Visit the ERC 1155 contract on Oasis Emerald Testnet at https://testnet.bscscan.com/address/0x713da13df3ea464610e2944dcee3cf1f5b86d923
 
 # Integration
 Building your own NFT Minting Engine, Marketplace or Offering it as a Service? Reach out at info@proofsys.io for implementation and integration inquiries.
