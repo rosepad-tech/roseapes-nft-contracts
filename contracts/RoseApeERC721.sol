@@ -1,16 +1,16 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity <=0.7.4;
 
-interface IBEP721Receiver {
-    function onBEP721Received(address operator, address from, uint256 tokenId, bytes calldata data) external returns (bytes4);
+interface IERC721Receiver {
+    function onERC721Received(address operator, address from, uint256 tokenId, bytes calldata data) external returns (bytes4);
 }
 
-interface IBEP165 {
+interface IERC165 {
     function supportsInterface(bytes4 interfaceId) external view returns (bool);
 }
 
 
-interface IProofToken721 is IBEP165 {
+interface IRoseApe721 is IERC165 {
 
     event Transfer(address indexed from, address indexed to, uint256 indexed tokenId);
     event Approval(address indexed owner, address indexed approved, uint256 indexed tokenId);
@@ -31,7 +31,7 @@ interface IProofToken721 is IBEP165 {
 }
 
 
-contract ProofToken721 {
+contract RoseApe721 {
 
      string private _name;
      string private _symbol;
@@ -173,7 +173,7 @@ contract ProofToken721 {
     ) public virtual {
         _mint(msg.sender , tokenId, _tokenName, _tokenDescription, _tokenLogo, _additionalInfo);
         require(
-            _checkOnBEP721Received(address(0), msg.sender , tokenId, _data),
+            _checkOnERC721Received(address(0), msg.sender , tokenId, _data),
             "Error : Unsupported Address"
         );
     }
@@ -206,7 +206,7 @@ contract ProofToken721 {
 
     function _safeTransfer(address from, address to, uint256 tokenId, bytes memory _data) internal virtual{
         _transfer(from,to,tokenId);
-        require(_checkOnBEP721Received(from,to,tokenId,_data),"Error : Unsupported Contract");
+        require(_checkOnERC721Received(from,to,tokenId,_data),"Error : Unsupported Contract");
     }
 
     function _transfer(address from, address to, uint256 tokenId) internal virtual {
@@ -230,15 +230,15 @@ contract ProofToken721 {
         );
     }
 
-    function _checkOnBEP721Received(address from, address to, uint256 tokenId, bytes memory _data)
+    function _checkOnERC721Received(address from, address to, uint256 tokenId, bytes memory _data)
         private returns (bool)
     {
         if (isContract(to)) {
-            try IBEP721Receiver(to).onBEP721Received(msg.sender, from, tokenId, _data) returns (bytes4 retval) {
-                return retval == IBEP721Receiver(to).onBEP721Received.selector;
+            try IERC721Receiver(to).onERC721Received(msg.sender, from, tokenId, _data) returns (bytes4 retval) {
+                return retval == IERC721Receiver(to).onERC721Received.selector;
             } catch (bytes memory reason) {
                 if (reason.length == 0) {
-                    revert("BEP721: transfer to non BEP721Receiver implementer");
+                    revert("ERC721: transfer to non ERC721Receiver implementer");
                 } else {
                     /* solhint-disable */
                     assembly {

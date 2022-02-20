@@ -4,11 +4,11 @@ pragma solidity <=0.7.4;
 
 import "./Address.sol";
 
-interface IBEP165 {
+interface IERC165 {
     function supportsInterface(bytes4 interfaceId) external view returns (bool);
 }
 
-interface IProofToken1155 is IBEP165 {
+interface IRoseApe1155 is IERC165 {
     event TransferSingle(address indexed operator, address indexed from, address indexed to, uint256 id, uint256 value);
     event TransferBatch(address indexed operator, address indexed from, address indexed to, uint256[] ids, uint256[] values);
     event ApprovalForAll(address indexed account, address indexed operator, bool approved);
@@ -22,13 +22,13 @@ interface IProofToken1155 is IBEP165 {
     function safeBatchTransferFrom(address from, address to, uint256[] calldata ids, uint256[] calldata amounts, bytes calldata data) external;
 }
 
-interface IBEP1155MetadataURI is IProofToken1155 {
+interface IERC1155MetadataURI is IRoseApe1155 {
     function uri(uint256 id) external override view returns (string memory);
 }
 
-interface IBEP1155Receiver is IBEP165 {
+interface IERC1155Receiver is IERC165 {
 
-    function onBEP1155Received(
+    function onERC1155Received(
         address operator,
         address from,
         uint256 id,
@@ -38,7 +38,7 @@ interface IBEP1155Receiver is IBEP165 {
         external
         returns(bytes4);
 
-    function onBEP1155BatchReceived(
+    function onERC1155BatchReceived(
         address operator,
         address from,
         uint256[] calldata ids,
@@ -60,7 +60,7 @@ abstract contract Context {
     }
 }
 
-contract ProofToken1155 is IProofToken1155, Context {
+contract RoseApe1155 is IRoseApe1155, Context {
     using Address for address;
 
     // Mapping tokenId to address to balance
@@ -85,7 +85,7 @@ contract ProofToken1155 is IProofToken1155, Context {
     }
 
     function balanceOf(address account, uint256 id) public view virtual override returns (uint256) {
-        require(account != address(0), "BEP1155: balance query for the zero address");
+        require(account != address(0), "ERC1155: balance query for the zero address");
         return _balances[id][account];
     }
 
@@ -111,7 +111,7 @@ contract ProofToken1155 is IProofToken1155, Context {
     }
 
     function setApprovalForAll(address operator, bool approved) public virtual override {
-        require(_msgSender() != operator, "BEP1155: setting approval status for self");
+        require(_msgSender() != operator, "ERC1155: setting approval status for self");
 
         _operatorApprovals[_msgSender()][operator] = approved;
         emit ApprovalForAll(_msgSender(), operator, approved);
@@ -132,10 +132,10 @@ contract ProofToken1155 is IProofToken1155, Context {
         virtual
         override
     {
-        require(to != address(0), "BEP1155: transfer to the zero address");
+        require(to != address(0), "ERC1155: transfer to the zero address");
         require(
             from == _msgSender() || isApprovedForAll(from, _msgSender()),
-            "BEP1155: caller is not owner nor approved"
+            "ERC1155: caller is not owner nor approved"
         );
 
         address operator = _msgSender();
@@ -143,7 +143,7 @@ contract ProofToken1155 is IProofToken1155, Context {
         _beforeTokenTransfer(operator, from, to, _asSingletonArray(id), _asSingletonArray(amount), data);
 
         uint256 fromBalance = _balances[id][from];
-        require(fromBalance >= amount, "BEP1155: insufficient balance for transfer");
+        require(fromBalance >= amount, "ERC1155: insufficient balance for transfer");
         _balances[id][from] = fromBalance - amount;
         _balances[id][to] += amount;
 
@@ -163,11 +163,11 @@ contract ProofToken1155 is IProofToken1155, Context {
         virtual
         override
     {
-        require(ids.length == amounts.length, "BEP1155: ids and amounts length mismatch");
-        require(to != address(0), "BEP1155: transfer to the zero address");
+        require(ids.length == amounts.length, "ERC1155: ids and amounts length mismatch");
+        require(to != address(0), "ERC1155: transfer to the zero address");
         require(
             from == _msgSender() || isApprovedForAll(from, _msgSender()),
-            "BEP1155: transfer caller is not owner nor approved"
+            "ERC1155: transfer caller is not owner nor approved"
         );
 
         address operator = _msgSender();
@@ -179,7 +179,7 @@ contract ProofToken1155 is IProofToken1155, Context {
             uint256 amount = amounts[i];
 
             uint256 fromBalance = _balances[id][from];
-            require(fromBalance >= amount, "BEP1155: insufficient balance for transfer");
+            require(fromBalance >= amount, "ERC1155: insufficient balance for transfer");
             _balances[id][from] = fromBalance - amount;
             _balances[id][to] += amount;
         }
@@ -195,7 +195,7 @@ contract ProofToken1155 is IProofToken1155, Context {
         uint256 amount, 
         bytes memory data
     ) internal virtual {
-        require(account != address(0), "BEP1155: mint to the zero address");
+        require(account != address(0), "ERC1155: mint to the zero address");
 
         address operator = _msgSender();
 
@@ -208,8 +208,8 @@ contract ProofToken1155 is IProofToken1155, Context {
     }
 
     function _mintBatch(address to, uint256[] memory ids, uint256[] memory amounts, bytes memory data) internal virtual {
-        require(to != address(0), "BEP1155: mint to the zero address");
-        require(ids.length == amounts.length, "BEP1155: ids and amounts length mismatch");
+        require(to != address(0), "ERC1155: mint to the zero address");
+        require(ids.length == amounts.length, "ERC1155: ids and amounts length mismatch");
 
         address operator = _msgSender();
 
@@ -225,22 +225,22 @@ contract ProofToken1155 is IProofToken1155, Context {
     }
 
     function _burn(address account, uint256 id, uint256 amount) internal virtual {
-        require(account != address(0), "BEP1155: burn from the zero address");
+        require(account != address(0), "ERC1155: burn from the zero address");
 
         address operator = _msgSender();
 
         _beforeTokenTransfer(operator, account, address(0), _asSingletonArray(id), _asSingletonArray(amount), "");
 
         uint256 accountBalance = _balances[id][account];
-        require(accountBalance >= amount, "BEP1155: burn amount exceeds balance");
+        require(accountBalance >= amount, "ERC1155: burn amount exceeds balance");
         _balances[id][account] = accountBalance - amount;
 
         emit TransferSingle(operator, account, address(0), id, amount);
     }
 
     function _burnBatch(address account, uint256[] memory ids, uint256[] memory amounts) internal virtual {
-        require(account != address(0), "BEP1155: burn from the zero address");
-        require(ids.length == amounts.length, "BEP1155: ids and amounts length mismatch");
+        require(account != address(0), "ERC1155: burn from the zero address");
+        require(ids.length == amounts.length, "ERC1155: ids and amounts length mismatch");
 
         address operator = _msgSender();
 
@@ -251,7 +251,7 @@ contract ProofToken1155 is IProofToken1155, Context {
             uint256 amount = amounts[i];
 
             uint256 accountBalance = _balances[id][account];
-            require(accountBalance >= amount, "BEP1155: burn amount exceeds balance");
+            require(accountBalance >= amount, "ERC1155: burn amount exceeds balance");
             _balances[id][account] = accountBalance - amount;
         }
 
@@ -281,14 +281,14 @@ contract ProofToken1155 is IProofToken1155, Context {
         private
     {
         if (to.isContract()) {
-            try IBEP1155Receiver(to).onBEP1155Received(operator, from, id, amount, data) returns (bytes4 response) {
-                if (response != IBEP1155Receiver(to).onBEP1155Received.selector) {
-                    revert("BEP1155: BEP1155Receiver rejected tokens");
+            try IERC1155Receiver(to).onERC1155Received(operator, from, id, amount, data) returns (bytes4 response) {
+                if (response != IERC1155Receiver(to).onERC1155Received.selector) {
+                    revert("ERC1155: ERC1155Receiver rejected tokens");
                 }
             } catch Error(string memory reason) {
                 revert(reason);
             } catch {
-                revert("BEP1155: transfer to non BEP1155Receiver implementer");
+                revert("ERC1155: transfer to non ERC1155Receiver implementer");
             }
         }
     }
@@ -304,14 +304,14 @@ contract ProofToken1155 is IProofToken1155, Context {
         private
     {
         if (to.isContract()) {
-            try IBEP1155Receiver(to).onBEP1155BatchReceived(operator, from, ids, amounts, data) returns (bytes4 response) {
-                if (response != IBEP1155Receiver(to).onBEP1155BatchReceived.selector) {
-                    revert("BEP1155: BEP1155Receiver rejected tokens");
+            try IERC1155Receiver(to).onERC1155BatchReceived(operator, from, ids, amounts, data) returns (bytes4 response) {
+                if (response != IERC1155Receiver(to).onERC1155BatchReceived.selector) {
+                    revert("ERC1155: ERC1155Receiver rejected tokens");
                 }
             } catch Error(string memory reason) {
                 revert(reason);
             } catch {
-                revert("BEP1155: transfer to non BEP1155Receiver implementer");
+                revert("ERC1155: transfer to non ERC1155Receiver implementer");
             }
         }
     }
@@ -323,15 +323,15 @@ contract ProofToken1155 is IProofToken1155, Context {
         return array;
     }
 
-    function supportsInterface(bytes4 interfaceId) public view virtual override(IBEP165) returns (bool) {
-        return interfaceId == type(IBEP165).interfaceId
-            || interfaceId == type(IBEP1155MetadataURI).interfaceId;
+    function supportsInterface(bytes4 interfaceId) public view virtual override(IERC165) returns (bool) {
+        return interfaceId == type(IERC165).interfaceId
+            || interfaceId == type(IERC1155MetadataURI).interfaceId;
     }
 
 }
 
 
-contract ProofTokenBEP1155 is ProofToken1155 {
+contract RoseApeERC1155 is RoseApe1155 {
 
     uint256 public totalSupply = 0;
     address public admin;
@@ -350,7 +350,7 @@ contract ProofTokenBEP1155 is ProofToken1155 {
 
     event Mint(address indexed to, uint256 tokenId , uint256 amount);
 
-    constructor(string memory name_, string memory symbol_) public ProofToken1155("https://ipfs.io/ipfs/{id}.json") {
+    constructor(string memory name_, string memory symbol_) public RoseApe1155("https://ipfs.io/ipfs/{id}.json") {
         admin = msg.sender;
         name = name_;
         symbol = symbol_;

@@ -1,7 +1,7 @@
 {
   "contractName": "Context",
   "abi": [],
-  "metadata": "{\"compiler\":{\"version\":\"0.7.4+commit.3f05b770\"},\"language\":\"Solidity\",\"output\":{\"abi\":[],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"/Users/sujith/Desktop/Work/Upwork/NFT_Engine/contracts/ProofTokenBEP1155.sol\":\"Context\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/Users/sujith/Desktop/Work/Upwork/NFT_Engine/contracts/Address.sol\":{\"keccak256\":\"0x91da6d84f11ff02077c5fe17b268caaa485555c7bb79c95b6fb54305d2d1c49c\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://96f2faedbe523303f262b830d3d86386649e91b0767991a3eae7fb9cef97424e\",\"dweb:/ipfs/QmPJL5sCCM3W8UZgJAR6osDG3i9m4iMnhZv6exEt4XZQhR\"]},\"/Users/sujith/Desktop/Work/Upwork/NFT_Engine/contracts/ProofTokenBEP1155.sol\":{\"keccak256\":\"0x0e6ae7115857eb94bf6ecad295c7540f23a625eed74d0afa111567df427cb511\",\"license\":\"UNLICENSED\",\"urls\":[\"bzz-raw://6454e8f6249bd0db275220c2dedde4c9a955df62edfd473141de7aaff7050a99\",\"dweb:/ipfs/QmV74KEg1vdvfT5eSVQmtvJZqxrif1PW6v2m2ARb8CjuF8\"]}},\"version\":1}",
+  "metadata": "{\"compiler\":{\"version\":\"0.7.4+commit.3f05b770\"},\"language\":\"Solidity\",\"output\":{\"abi\":[],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"/Users/sujith/Desktop/Work/Upwork/NFT_Engine/contracts/RoseApeERC1155.sol\":\"Context\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/Users/sujith/Desktop/Work/Upwork/NFT_Engine/contracts/Address.sol\":{\"keccak256\":\"0x91da6d84f11ff02077c5fe17b268caaa485555c7bb79c95b6fb54305d2d1c49c\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://96f2faedbe523303f262b830d3d86386649e91b0767991a3eae7fb9cef97424e\",\"dweb:/ipfs/QmPJL5sCCM3W8UZgJAR6osDG3i9m4iMnhZv6exEt4XZQhR\"]},\"/Users/sujith/Desktop/Work/Upwork/NFT_Engine/contracts/RoseApeERC1155.sol\":{\"keccak256\":\"0x0e6ae7115857eb94bf6ecad295c7540f23a625eed74d0afa111567df427cb511\",\"license\":\"UNLICENSED\",\"urls\":[\"bzz-raw://6454e8f6249bd0db275220c2dedde4c9a955df62edfd473141de7aaff7050a99\",\"dweb:/ipfs/QmV74KEg1vdvfT5eSVQmtvJZqxrif1PW6v2m2ARb8CjuF8\"]}},\"version\":1}",
   "bytecode": "0x",
   "deployedBytecode": "0x",
   "immutableReferences": {},
@@ -9,10 +9,10 @@
   "deployedGeneratedSources": [],
   "sourceMap": "",
   "deployedSourceMap": "",
-  "source": "// SPDX-License-Identifier: UNLICENSED\n\npragma solidity <=0.7.4;\n\nimport \"./Address.sol\";\n\ninterface IBEP165 {\n    function supportsInterface(bytes4 interfaceId) external view returns (bool);\n}\n\ninterface IProofToken1155 is IBEP165 {\n    event TransferSingle(address indexed operator, address indexed from, address indexed to, uint256 id, uint256 value);\n    event TransferBatch(address indexed operator, address indexed from, address indexed to, uint256[] ids, uint256[] values);\n    event ApprovalForAll(address indexed account, address indexed operator, bool approved);\n    event URI(string value, uint256 indexed id);\n    function uri(uint256) external view returns(string memory);\n    function balanceOf(address account, uint256 id) external view returns (uint256);\n    function balanceOfBatch(address[] calldata accounts, uint256[] calldata ids) external view returns (uint256[] memory);\n    function setApprovalForAll(address operator, bool approved) external;\n    function isApprovedForAll(address account, address operator) external view returns (bool);\n    function safeTransferFrom(address from, address to, uint256 id, uint256 amount, bytes calldata data) external;\n    function safeBatchTransferFrom(address from, address to, uint256[] calldata ids, uint256[] calldata amounts, bytes calldata data) external;\n}\n\ninterface IBEP1155MetadataURI is IProofToken1155 {\n    function uri(uint256 id) external override view returns (string memory);\n}\n\ninterface IBEP1155Receiver is IBEP165 {\n\n    function onBEP1155Received(\n        address operator,\n        address from,\n        uint256 id,\n        uint256 value,\n        bytes calldata data\n    )\n        external\n        returns(bytes4);\n\n    function onBEP1155BatchReceived(\n        address operator,\n        address from,\n        uint256[] calldata ids,\n        uint256[] calldata values,\n        bytes calldata data\n    )\n        external\n        returns(bytes4);\n}\n\nabstract contract Context {\n    function _msgSender() internal view virtual returns (address) {\n        return msg.sender;\n    }\n\n    function _msgData() internal view virtual returns (bytes calldata) {\n        this; // silence state mutability warning without generating bytecode - see https://github.com/ethereum/solidity/issues/2691\n        return msg.data;\n    }\n}\n\ncontract ProofToken1155 is IProofToken1155, Context {\n    using Address for address;\n\n    // Mapping tokenId to address to balance\n    mapping(uint256 => mapping(address => uint256)) private _balances;\n\n    // Operator Approvals\n    mapping(address => mapping(address => bool)) private _operatorApprovals;\n\n    // Used for ID Substitution\n    string private _uri;\n\n    constructor(string memory uri_){\n        _setURI(uri_);\n    }\n\n    function _setURI(string memory newuri) internal virtual {\n        _uri = newuri;\n    }\n\n    function uri(uint256) public view virtual override returns (string memory) {\n        return _uri;\n    }\n\n    function balanceOf(address account, uint256 id) public view virtual override returns (uint256) {\n        require(account != address(0), \"BEP1155: balance query for the zero address\");\n        return _balances[id][account];\n    }\n\n    function balanceOfBatch(\n        address[] memory accounts,\n        uint256[] memory ids\n    )\n        public\n        view\n        virtual\n        override\n        returns (uint256[] memory)\n    {\n        require(accounts.length == ids.length, \"ERC1155: accounts and ids length mismatch\");\n\n        uint256[] memory batchBalances = new uint256[](accounts.length);\n\n        for (uint256 i = 0; i < accounts.length; ++i) {\n            batchBalances[i] = balanceOf(accounts[i], ids[i]);\n        }\n\n        return batchBalances;\n    }\n\n    function setApprovalForAll(address operator, bool approved) public virtual override {\n        require(_msgSender() != operator, \"BEP1155: setting approval status for self\");\n\n        _operatorApprovals[_msgSender()][operator] = approved;\n        emit ApprovalForAll(_msgSender(), operator, approved);\n    }\n\n    function isApprovedForAll(address account, address operator) public view virtual override returns (bool) {\n        return _operatorApprovals[account][operator];\n    }\n\n    function safeTransferFrom(\n        address from,\n        address to,\n        uint256 id,\n        uint256 amount,\n        bytes memory data\n    )\n        public\n        virtual\n        override\n    {\n        require(to != address(0), \"BEP1155: transfer to the zero address\");\n        require(\n            from == _msgSender() || isApprovedForAll(from, _msgSender()),\n            \"BEP1155: caller is not owner nor approved\"\n        );\n\n        address operator = _msgSender();\n\n        _beforeTokenTransfer(operator, from, to, _asSingletonArray(id), _asSingletonArray(amount), data);\n\n        uint256 fromBalance = _balances[id][from];\n        require(fromBalance >= amount, \"BEP1155: insufficient balance for transfer\");\n        _balances[id][from] = fromBalance - amount;\n        _balances[id][to] += amount;\n\n        emit TransferSingle(operator, from, to, id, amount);\n\n        _doSafeTransferAcceptanceCheck(operator, from, to, id, amount, data);\n    }\n\n    function safeBatchTransferFrom(\n        address from,\n        address to,\n        uint256[] memory ids,\n        uint256[] memory amounts,\n        bytes memory data\n    )\n        public\n        virtual\n        override\n    {\n        require(ids.length == amounts.length, \"BEP1155: ids and amounts length mismatch\");\n        require(to != address(0), \"BEP1155: transfer to the zero address\");\n        require(\n            from == _msgSender() || isApprovedForAll(from, _msgSender()),\n            \"BEP1155: transfer caller is not owner nor approved\"\n        );\n\n        address operator = _msgSender();\n\n        _beforeTokenTransfer(operator, from, to, ids, amounts, data);\n\n        for (uint256 i = 0; i < ids.length; ++i) {\n            uint256 id = ids[i];\n            uint256 amount = amounts[i];\n\n            uint256 fromBalance = _balances[id][from];\n            require(fromBalance >= amount, \"BEP1155: insufficient balance for transfer\");\n            _balances[id][from] = fromBalance - amount;\n            _balances[id][to] += amount;\n        }\n\n        emit TransferBatch(operator, from, to, ids, amounts);\n\n        _doSafeBatchTransferAcceptanceCheck(operator, from, to, ids, amounts, data);\n    }\n\n    function _mint(\n        address account, \n        uint256 id, \n        uint256 amount, \n        bytes memory data\n    ) internal virtual {\n        require(account != address(0), \"BEP1155: mint to the zero address\");\n\n        address operator = _msgSender();\n\n        _beforeTokenTransfer(operator, address(0), account, _asSingletonArray(id), _asSingletonArray(amount), data);\n\n        _balances[id][account] += amount;\n        emit TransferSingle(operator, address(0), account, id, amount);\n\n        _doSafeTransferAcceptanceCheck(operator, address(0), account, id, amount, data);\n    }\n\n    function _mintBatch(address to, uint256[] memory ids, uint256[] memory amounts, bytes memory data) internal virtual {\n        require(to != address(0), \"BEP1155: mint to the zero address\");\n        require(ids.length == amounts.length, \"BEP1155: ids and amounts length mismatch\");\n\n        address operator = _msgSender();\n\n        _beforeTokenTransfer(operator, address(0), to, ids, amounts, data);\n\n        for (uint i = 0; i < ids.length; i++) {\n            _balances[ids[i]][to] += amounts[i];\n        }\n\n        emit TransferBatch(operator, address(0), to, ids, amounts);\n\n        _doSafeBatchTransferAcceptanceCheck(operator, address(0), to, ids, amounts, data);\n    }\n\n    function _burn(address account, uint256 id, uint256 amount) internal virtual {\n        require(account != address(0), \"BEP1155: burn from the zero address\");\n\n        address operator = _msgSender();\n\n        _beforeTokenTransfer(operator, account, address(0), _asSingletonArray(id), _asSingletonArray(amount), \"\");\n\n        uint256 accountBalance = _balances[id][account];\n        require(accountBalance >= amount, \"BEP1155: burn amount exceeds balance\");\n        _balances[id][account] = accountBalance - amount;\n\n        emit TransferSingle(operator, account, address(0), id, amount);\n    }\n\n    function _burnBatch(address account, uint256[] memory ids, uint256[] memory amounts) internal virtual {\n        require(account != address(0), \"BEP1155: burn from the zero address\");\n        require(ids.length == amounts.length, \"BEP1155: ids and amounts length mismatch\");\n\n        address operator = _msgSender();\n\n        _beforeTokenTransfer(operator, account, address(0), ids, amounts, \"\");\n\n        for (uint i = 0; i < ids.length; i++) {\n            uint256 id = ids[i];\n            uint256 amount = amounts[i];\n\n            uint256 accountBalance = _balances[id][account];\n            require(accountBalance >= amount, \"BEP1155: burn amount exceeds balance\");\n            _balances[id][account] = accountBalance - amount;\n        }\n\n        emit TransferBatch(operator, account, address(0), ids, amounts);\n    }\n\n    function _beforeTokenTransfer(\n        address operator,\n        address from,\n        address to,\n        uint256[] memory ids,\n        uint256[] memory amounts,\n        bytes memory data\n    )\n        internal\n        virtual\n    { }\n\n    function _doSafeTransferAcceptanceCheck(\n        address operator,\n        address from,\n        address to,\n        uint256 id,\n        uint256 amount,\n        bytes memory data\n    )\n        private\n    {\n        if (to.isContract()) {\n            try IBEP1155Receiver(to).onBEP1155Received(operator, from, id, amount, data) returns (bytes4 response) {\n                if (response != IBEP1155Receiver(to).onBEP1155Received.selector) {\n                    revert(\"BEP1155: BEP1155Receiver rejected tokens\");\n                }\n            } catch Error(string memory reason) {\n                revert(reason);\n            } catch {\n                revert(\"BEP1155: transfer to non BEP1155Receiver implementer\");\n            }\n        }\n    }\n\n    function _doSafeBatchTransferAcceptanceCheck(\n        address operator,\n        address from,\n        address to,\n        uint256[] memory ids,\n        uint256[] memory amounts,\n        bytes memory data\n    )\n        private\n    {\n        if (to.isContract()) {\n            try IBEP1155Receiver(to).onBEP1155BatchReceived(operator, from, ids, amounts, data) returns (bytes4 response) {\n                if (response != IBEP1155Receiver(to).onBEP1155BatchReceived.selector) {\n                    revert(\"BEP1155: BEP1155Receiver rejected tokens\");\n                }\n            } catch Error(string memory reason) {\n                revert(reason);\n            } catch {\n                revert(\"BEP1155: transfer to non BEP1155Receiver implementer\");\n            }\n        }\n    }\n\n    function _asSingletonArray(uint256 element) private pure returns (uint256[] memory) {\n        uint256[] memory array = new uint256[](1);\n        array[0] = element;\n\n        return array;\n    }\n\n    function supportsInterface(bytes4 interfaceId) public view virtual override(IBEP165) returns (bool) {\n        return interfaceId == type(IBEP165).interfaceId\n            || interfaceId == type(IBEP1155MetadataURI).interfaceId;\n    }\n\n}\n\n\ncontract ProofTokenBEP1155 is ProofToken1155 {\n\n    uint256 public totalSupply = 0;\n    address public admin;\n\n    string public name;\n    string public symbol;\n\n    struct Info {\n      bytes name;\n      bytes description;\n      bytes logo;\n      bytes additionalInfo;\n    }\n\n    mapping(uint256 => Info) public info;\n\n    event Mint(address indexed to, uint256 tokenId , uint256 amount);\n\n    constructor(string memory name_, string memory symbol_) public ProofToken1155(\"https://ipfs.io/ipfs/{id}.json\") {\n        admin = msg.sender;\n        name = name_;\n        symbol = symbol_;\n    }\n\n    function mint(\n        uint256 supply,\n        string memory name_,\n        string memory description_,\n        string memory logo_,\n        string memory additionalInfo_\n    ) public virtual returns(bool){\n        totalSupply += 1;\n        uint256 tokenId = totalSupply;\n        Info storage i = info[tokenId];\n        i.name = bytes(name_);\n        i.description = bytes(description_);\n        i.logo = bytes(logo_);\n        i.additionalInfo = bytes(additionalInfo_);\n        _mint(msg.sender, tokenId, supply, \"\");\n        emit Mint(msg.sender, tokenId, supply);\n        return true;\n    }\n\n}",
-  "sourcePath": "/Users/sujith/Desktop/Work/Upwork/NFT_Engine/contracts/ProofTokenBEP1155.sol",
+  "source": "// SPDX-License-Identifier: UNLICENSED\n\npragma solidity <=0.7.4;\n\nimport \"./Address.sol\";\n\ninterface IERC165 {\n    function supportsInterface(bytes4 interfaceId) external view returns (bool);\n}\n\ninterface IRoseApe1155 is IERC165 {\n    event TransferSingle(address indexed operator, address indexed from, address indexed to, uint256 id, uint256 value);\n    event TransferBatch(address indexed operator, address indexed from, address indexed to, uint256[] ids, uint256[] values);\n    event ApprovalForAll(address indexed account, address indexed operator, bool approved);\n    event URI(string value, uint256 indexed id);\n    function uri(uint256) external view returns(string memory);\n    function balanceOf(address account, uint256 id) external view returns (uint256);\n    function balanceOfBatch(address[] calldata accounts, uint256[] calldata ids) external view returns (uint256[] memory);\n    function setApprovalForAll(address operator, bool approved) external;\n    function isApprovedForAll(address account, address operator) external view returns (bool);\n    function safeTransferFrom(address from, address to, uint256 id, uint256 amount, bytes calldata data) external;\n    function safeBatchTransferFrom(address from, address to, uint256[] calldata ids, uint256[] calldata amounts, bytes calldata data) external;\n}\n\ninterface IERC1155MetadataURI is IRoseApe1155 {\n    function uri(uint256 id) external override view returns (string memory);\n}\n\ninterface IERC1155Receiver is IERC165 {\n\n    function onERC1155Received(\n        address operator,\n        address from,\n        uint256 id,\n        uint256 value,\n        bytes calldata data\n    )\n        external\n        returns(bytes4);\n\n    function onERC1155BatchReceived(\n        address operator,\n        address from,\n        uint256[] calldata ids,\n        uint256[] calldata values,\n        bytes calldata data\n    )\n        external\n        returns(bytes4);\n}\n\nabstract contract Context {\n    function _msgSender() internal view virtual returns (address) {\n        return msg.sender;\n    }\n\n    function _msgData() internal view virtual returns (bytes calldata) {\n        this; // silence state mutability warning without generating bytecode - see https://github.com/ethereum/solidity/issues/2691\n        return msg.data;\n    }\n}\n\ncontract RoseApe1155 is IRoseApe1155, Context {\n    using Address for address;\n\n    // Mapping tokenId to address to balance\n    mapping(uint256 => mapping(address => uint256)) private _balances;\n\n    // Operator Approvals\n    mapping(address => mapping(address => bool)) private _operatorApprovals;\n\n    // Used for ID Substitution\n    string private _uri;\n\n    constructor(string memory uri_){\n        _setURI(uri_);\n    }\n\n    function _setURI(string memory newuri) internal virtual {\n        _uri = newuri;\n    }\n\n    function uri(uint256) public view virtual override returns (string memory) {\n        return _uri;\n    }\n\n    function balanceOf(address account, uint256 id) public view virtual override returns (uint256) {\n        require(account != address(0), \"ERC1155: balance query for the zero address\");\n        return _balances[id][account];\n    }\n\n    function balanceOfBatch(\n        address[] memory accounts,\n        uint256[] memory ids\n    )\n        public\n        view\n        virtual\n        override\n        returns (uint256[] memory)\n    {\n        require(accounts.length == ids.length, \"ERC1155: accounts and ids length mismatch\");\n\n        uint256[] memory batchBalances = new uint256[](accounts.length);\n\n        for (uint256 i = 0; i < accounts.length; ++i) {\n            batchBalances[i] = balanceOf(accounts[i], ids[i]);\n        }\n\n        return batchBalances;\n    }\n\n    function setApprovalForAll(address operator, bool approved) public virtual override {\n        require(_msgSender() != operator, \"ERC1155: setting approval status for self\");\n\n        _operatorApprovals[_msgSender()][operator] = approved;\n        emit ApprovalForAll(_msgSender(), operator, approved);\n    }\n\n    function isApprovedForAll(address account, address operator) public view virtual override returns (bool) {\n        return _operatorApprovals[account][operator];\n    }\n\n    function safeTransferFrom(\n        address from,\n        address to,\n        uint256 id,\n        uint256 amount,\n        bytes memory data\n    )\n        public\n        virtual\n        override\n    {\n        require(to != address(0), \"ERC1155: transfer to the zero address\");\n        require(\n            from == _msgSender() || isApprovedForAll(from, _msgSender()),\n            \"ERC1155: caller is not owner nor approved\"\n        );\n\n        address operator = _msgSender();\n\n        _beforeTokenTransfer(operator, from, to, _asSingletonArray(id), _asSingletonArray(amount), data);\n\n        uint256 fromBalance = _balances[id][from];\n        require(fromBalance >= amount, \"ERC1155: insufficient balance for transfer\");\n        _balances[id][from] = fromBalance - amount;\n        _balances[id][to] += amount;\n\n        emit TransferSingle(operator, from, to, id, amount);\n\n        _doSafeTransferAcceptanceCheck(operator, from, to, id, amount, data);\n    }\n\n    function safeBatchTransferFrom(\n        address from,\n        address to,\n        uint256[] memory ids,\n        uint256[] memory amounts,\n        bytes memory data\n    )\n        public\n        virtual\n        override\n    {\n        require(ids.length == amounts.length, \"ERC1155: ids and amounts length mismatch\");\n        require(to != address(0), \"ERC1155: transfer to the zero address\");\n        require(\n            from == _msgSender() || isApprovedForAll(from, _msgSender()),\n            \"ERC1155: transfer caller is not owner nor approved\"\n        );\n\n        address operator = _msgSender();\n\n        _beforeTokenTransfer(operator, from, to, ids, amounts, data);\n\n        for (uint256 i = 0; i < ids.length; ++i) {\n            uint256 id = ids[i];\n            uint256 amount = amounts[i];\n\n            uint256 fromBalance = _balances[id][from];\n            require(fromBalance >= amount, \"ERC1155: insufficient balance for transfer\");\n            _balances[id][from] = fromBalance - amount;\n            _balances[id][to] += amount;\n        }\n\n        emit TransferBatch(operator, from, to, ids, amounts);\n\n        _doSafeBatchTransferAcceptanceCheck(operator, from, to, ids, amounts, data);\n    }\n\n    function _mint(\n        address account, \n        uint256 id, \n        uint256 amount, \n        bytes memory data\n    ) internal virtual {\n        require(account != address(0), \"ERC1155: mint to the zero address\");\n\n        address operator = _msgSender();\n\n        _beforeTokenTransfer(operator, address(0), account, _asSingletonArray(id), _asSingletonArray(amount), data);\n\n        _balances[id][account] += amount;\n        emit TransferSingle(operator, address(0), account, id, amount);\n\n        _doSafeTransferAcceptanceCheck(operator, address(0), account, id, amount, data);\n    }\n\n    function _mintBatch(address to, uint256[] memory ids, uint256[] memory amounts, bytes memory data) internal virtual {\n        require(to != address(0), \"ERC1155: mint to the zero address\");\n        require(ids.length == amounts.length, \"ERC1155: ids and amounts length mismatch\");\n\n        address operator = _msgSender();\n\n        _beforeTokenTransfer(operator, address(0), to, ids, amounts, data);\n\n        for (uint i = 0; i < ids.length; i++) {\n            _balances[ids[i]][to] += amounts[i];\n        }\n\n        emit TransferBatch(operator, address(0), to, ids, amounts);\n\n        _doSafeBatchTransferAcceptanceCheck(operator, address(0), to, ids, amounts, data);\n    }\n\n    function _burn(address account, uint256 id, uint256 amount) internal virtual {\n        require(account != address(0), \"ERC1155: burn from the zero address\");\n\n        address operator = _msgSender();\n\n        _beforeTokenTransfer(operator, account, address(0), _asSingletonArray(id), _asSingletonArray(amount), \"\");\n\n        uint256 accountBalance = _balances[id][account];\n        require(accountBalance >= amount, \"ERC1155: burn amount exceeds balance\");\n        _balances[id][account] = accountBalance - amount;\n\n        emit TransferSingle(operator, account, address(0), id, amount);\n    }\n\n    function _burnBatch(address account, uint256[] memory ids, uint256[] memory amounts) internal virtual {\n        require(account != address(0), \"ERC1155: burn from the zero address\");\n        require(ids.length == amounts.length, \"ERC1155: ids and amounts length mismatch\");\n\n        address operator = _msgSender();\n\n        _beforeTokenTransfer(operator, account, address(0), ids, amounts, \"\");\n\n        for (uint i = 0; i < ids.length; i++) {\n            uint256 id = ids[i];\n            uint256 amount = amounts[i];\n\n            uint256 accountBalance = _balances[id][account];\n            require(accountBalance >= amount, \"ERC1155: burn amount exceeds balance\");\n            _balances[id][account] = accountBalance - amount;\n        }\n\n        emit TransferBatch(operator, account, address(0), ids, amounts);\n    }\n\n    function _beforeTokenTransfer(\n        address operator,\n        address from,\n        address to,\n        uint256[] memory ids,\n        uint256[] memory amounts,\n        bytes memory data\n    )\n        internal\n        virtual\n    { }\n\n    function _doSafeTransferAcceptanceCheck(\n        address operator,\n        address from,\n        address to,\n        uint256 id,\n        uint256 amount,\n        bytes memory data\n    )\n        private\n    {\n        if (to.isContract()) {\n            try IERC1155Receiver(to).onERC1155Received(operator, from, id, amount, data) returns (bytes4 response) {\n                if (response != IERC1155Receiver(to).onERC1155Received.selector) {\n                    revert(\"ERC1155: ERC1155Receiver rejected tokens\");\n                }\n            } catch Error(string memory reason) {\n                revert(reason);\n            } catch {\n                revert(\"ERC1155: transfer to non ERC1155Receiver implementer\");\n            }\n        }\n    }\n\n    function _doSafeBatchTransferAcceptanceCheck(\n        address operator,\n        address from,\n        address to,\n        uint256[] memory ids,\n        uint256[] memory amounts,\n        bytes memory data\n    )\n        private\n    {\n        if (to.isContract()) {\n            try IERC1155Receiver(to).onERC1155BatchReceived(operator, from, ids, amounts, data) returns (bytes4 response) {\n                if (response != IERC1155Receiver(to).onERC1155BatchReceived.selector) {\n                    revert(\"ERC1155: ERC1155Receiver rejected tokens\");\n                }\n            } catch Error(string memory reason) {\n                revert(reason);\n            } catch {\n                revert(\"ERC1155: transfer to non ERC1155Receiver implementer\");\n            }\n        }\n    }\n\n    function _asSingletonArray(uint256 element) private pure returns (uint256[] memory) {\n        uint256[] memory array = new uint256[](1);\n        array[0] = element;\n\n        return array;\n    }\n\n    function supportsInterface(bytes4 interfaceId) public view virtual override(IERC165) returns (bool) {\n        return interfaceId == type(IERC165).interfaceId\n            || interfaceId == type(IERC1155MetadataURI).interfaceId;\n    }\n\n}\n\n\ncontract RoseApeERC1155 is RoseApe1155 {\n\n    uint256 public totalSupply = 0;\n    address public admin;\n\n    string public name;\n    string public symbol;\n\n    struct Info {\n      bytes name;\n      bytes description;\n      bytes logo;\n      bytes additionalInfo;\n    }\n\n    mapping(uint256 => Info) public info;\n\n    event Mint(address indexed to, uint256 tokenId , uint256 amount);\n\n    constructor(string memory name_, string memory symbol_) public RoseApe1155(\"https://ipfs.io/ipfs/{id}.json\") {\n        admin = msg.sender;\n        name = name_;\n        symbol = symbol_;\n    }\n\n    function mint(\n        uint256 supply,\n        string memory name_,\n        string memory description_,\n        string memory logo_,\n        string memory additionalInfo_\n    ) public virtual returns(bool){\n        totalSupply += 1;\n        uint256 tokenId = totalSupply;\n        Info storage i = info[tokenId];\n        i.name = bytes(name_);\n        i.description = bytes(description_);\n        i.logo = bytes(logo_);\n        i.additionalInfo = bytes(additionalInfo_);\n        _mint(msg.sender, tokenId, supply, \"\");\n        emit Mint(msg.sender, tokenId, supply);\n        return true;\n    }\n\n}",
+  "sourcePath": "/Users/sujith/Desktop/Work/Upwork/NFT_Engine/contracts/RoseApeERC1155.sol",
   "ast": {
-    "absolutePath": "/Users/sujith/Desktop/Work/Upwork/NFT_Engine/contracts/ProofTokenBEP1155.sol",
+    "absolutePath": "/Users/sujith/Desktop/Work/Upwork/NFT_Engine/contracts/RoseApeERC1155.sol",
     "exportedSymbols": {
       "Address": [
         295
@@ -20,22 +20,22 @@
       "Context": [
         488
       ],
-      "IBEP1155MetadataURI": [
+      "IERC1155MetadataURI": [
         432
       ],
-      "IBEP1155Receiver": [
+      "IERC1155Receiver": [
         467
       ],
-      "IBEP165": [
+      "IERC165": [
         306
       ],
-      "IProofToken1155": [
+      "IRoseApe1155": [
         421
       ],
-      "ProofToken1155": [
+      "RoseApe1155": [
         1487
       ],
-      "ProofTokenBEP1155": [
+      "RoseApeERC1155": [
         1627
       ]
     },
@@ -75,7 +75,7 @@
         "linearizedBaseContracts": [
           306
         ],
-        "name": "IBEP165",
+        "name": "IERC165",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
@@ -168,13 +168,13 @@
           {
             "baseName": {
               "id": 307,
-              "name": "IBEP165",
+              "name": "IERC165",
               "nodeType": "UserDefinedTypeName",
               "referencedDeclaration": 306,
               "src": "224:7:1",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_IBEP165_$306",
-                "typeString": "contract IBEP165"
+                "typeIdentifier": "t_contract$_IERC165_$306",
+                "typeString": "contract IERC165"
               }
             },
             "id": 308,
@@ -192,7 +192,7 @@
           421,
           306
         ],
-        "name": "IProofToken1155",
+        "name": "IRoseApe1155",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
@@ -1537,13 +1537,13 @@
           {
             "baseName": {
               "id": 422,
-              "name": "IProofToken1155",
+              "name": "IRoseApe1155",
               "nodeType": "UserDefinedTypeName",
               "referencedDeclaration": 421,
               "src": "1358:15:1",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_IProofToken1155_$421",
-                "typeString": "contract IProofToken1155"
+                "typeIdentifier": "t_contract$_IRoseApe1155_$421",
+                "typeString": "contract IRoseApe1155"
               }
             },
             "id": 423,
@@ -1563,7 +1563,7 @@
           421,
           306
         ],
-        "name": "IBEP1155MetadataURI",
+        "name": "IERC1155MetadataURI",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
@@ -1665,13 +1665,13 @@
           {
             "baseName": {
               "id": 433,
-              "name": "IBEP165",
+              "name": "IERC165",
               "nodeType": "UserDefinedTypeName",
               "referencedDeclaration": 306,
               "src": "1486:7:1",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_IBEP165_$306",
-                "typeString": "contract IBEP165"
+                "typeIdentifier": "t_contract$_IERC165_$306",
+                "typeString": "contract IERC165"
               }
             },
             "id": 434,
@@ -1689,7 +1689,7 @@
           467,
           306
         ],
-        "name": "IBEP1155Receiver",
+        "name": "IERC1155Receiver",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
@@ -1698,7 +1698,7 @@
             "implemented": false,
             "kind": "function",
             "modifiers": [],
-            "name": "onBEP1155Received",
+            "name": "onERC1155Received",
             "nodeType": "FunctionDefinition",
             "parameters": {
               "id": 445,
@@ -1884,7 +1884,7 @@
             "implemented": false,
             "kind": "function",
             "modifiers": [],
-            "name": "onBEP1155BatchReceived",
+            "name": "onERC1155BatchReceived",
             "nodeType": "FunctionDefinition",
             "parameters": {
               "id": 462,
@@ -2309,13 +2309,13 @@
           {
             "baseName": {
               "id": 489,
-              "name": "IProofToken1155",
+              "name": "IRoseApe1155",
               "nodeType": "UserDefinedTypeName",
               "referencedDeclaration": 421,
               "src": "2325:15:1",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_IProofToken1155_$421",
-                "typeString": "contract IProofToken1155"
+                "typeIdentifier": "t_contract$_IRoseApe1155_$421",
+                "typeString": "contract IRoseApe1155"
               }
             },
             "id": 490,
@@ -2353,7 +2353,7 @@
           421,
           306
         ],
-        "name": "ProofToken1155",
+        "name": "RoseApe1155",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
@@ -2979,9 +2979,9 @@
                         "src": "3071:45:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_stringliteral_4b9018c8c5d4c06c2e530b8637d58b2b7cf3540aab4b786ebe68e9c857032e40",
-                          "typeString": "literal_string \"BEP1155: balance query for the zero address\""
+                          "typeString": "literal_string \"ERC1155: balance query for the zero address\""
                         },
-                        "value": "BEP1155: balance query for the zero address"
+                        "value": "ERC1155: balance query for the zero address"
                       }
                     ],
                     "expression": {
@@ -2992,7 +2992,7 @@
                         },
                         {
                           "typeIdentifier": "t_stringliteral_4b9018c8c5d4c06c2e530b8637d58b2b7cf3540aab4b786ebe68e9c857032e40",
-                          "typeString": "literal_string \"BEP1155: balance query for the zero address\""
+                          "typeString": "literal_string \"ERC1155: balance query for the zero address\""
                         }
                       ],
                       "id": 550,
@@ -4045,9 +4045,9 @@
                         "src": "3833:43:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_stringliteral_bb70af4dc8bf7eeac0859c39e4f8546e3bc15ca44f0909b34fb917fa00db24e2",
-                          "typeString": "literal_string \"BEP1155: setting approval status for self\""
+                          "typeString": "literal_string \"ERC1155: setting approval status for self\""
                         },
-                        "value": "BEP1155: setting approval status for self"
+                        "value": "ERC1155: setting approval status for self"
                       }
                     ],
                     "expression": {
@@ -4058,7 +4058,7 @@
                         },
                         {
                           "typeIdentifier": "t_stringliteral_bb70af4dc8bf7eeac0859c39e4f8546e3bc15ca44f0909b34fb917fa00db24e2",
-                          "typeString": "literal_string \"BEP1155: setting approval status for self\""
+                          "typeString": "literal_string \"ERC1155: setting approval status for self\""
                         }
                       ],
                       "id": 638,
@@ -4701,9 +4701,9 @@
                         "src": "4422:39:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_stringliteral_2ebdb09900b1383aeb098d89bff2522cbbe175451e7d49b46c57f86956bcffac",
-                          "typeString": "literal_string \"BEP1155: transfer to the zero address\""
+                          "typeString": "literal_string \"ERC1155: transfer to the zero address\""
                         },
-                        "value": "BEP1155: transfer to the zero address"
+                        "value": "ERC1155: transfer to the zero address"
                       }
                     ],
                     "expression": {
@@ -4714,7 +4714,7 @@
                         },
                         {
                           "typeIdentifier": "t_stringliteral_2ebdb09900b1383aeb098d89bff2522cbbe175451e7d49b46c57f86956bcffac",
-                          "typeString": "literal_string \"BEP1155: transfer to the zero address\""
+                          "typeString": "literal_string \"ERC1155: transfer to the zero address\""
                         }
                       ],
                       "id": 694,
@@ -4925,9 +4925,9 @@
                         "src": "4567:43:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_stringliteral_b696609d7542a43d193ae2b11d86326be5297c5152b80ff3fc14e79b99ff26fb",
-                          "typeString": "literal_string \"BEP1155: caller is not owner nor approved\""
+                          "typeString": "literal_string \"ERC1155: caller is not owner nor approved\""
                         },
-                        "value": "BEP1155: caller is not owner nor approved"
+                        "value": "ERC1155: caller is not owner nor approved"
                       }
                     ],
                     "expression": {
@@ -4938,7 +4938,7 @@
                         },
                         {
                           "typeIdentifier": "t_stringliteral_b696609d7542a43d193ae2b11d86326be5297c5152b80ff3fc14e79b99ff26fb",
-                          "typeString": "literal_string \"BEP1155: caller is not owner nor approved\""
+                          "typeString": "literal_string \"ERC1155: caller is not owner nor approved\""
                         }
                       ],
                       "id": 704,
@@ -5401,9 +5401,9 @@
                         "src": "4862:44:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_stringliteral_f7e6fa2a07e9c5c04d0dac1ac4dbc91df128bee99c497f8d078c283b527b5cde",
-                          "typeString": "literal_string \"BEP1155: insufficient balance for transfer\""
+                          "typeString": "literal_string \"ERC1155: insufficient balance for transfer\""
                         },
-                        "value": "BEP1155: insufficient balance for transfer"
+                        "value": "ERC1155: insufficient balance for transfer"
                       }
                     ],
                     "expression": {
@@ -5414,7 +5414,7 @@
                         },
                         {
                           "typeIdentifier": "t_stringliteral_f7e6fa2a07e9c5c04d0dac1ac4dbc91df128bee99c497f8d078c283b527b5cde",
-                          "typeString": "literal_string \"BEP1155: insufficient balance for transfer\""
+                          "typeString": "literal_string \"ERC1155: insufficient balance for transfer\""
                         }
                       ],
                       "id": 744,
@@ -6176,9 +6176,9 @@
                         "src": "5420:42:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_stringliteral_55c28202677e06f2793ee913a5e3e472c853657683309cb68a3a782104c5c605",
-                          "typeString": "literal_string \"BEP1155: ids and amounts length mismatch\""
+                          "typeString": "literal_string \"ERC1155: ids and amounts length mismatch\""
                         },
-                        "value": "BEP1155: ids and amounts length mismatch"
+                        "value": "ERC1155: ids and amounts length mismatch"
                       }
                     ],
                     "expression": {
@@ -6189,7 +6189,7 @@
                         },
                         {
                           "typeIdentifier": "t_stringliteral_55c28202677e06f2793ee913a5e3e472c853657683309cb68a3a782104c5c605",
-                          "typeString": "literal_string \"BEP1155: ids and amounts length mismatch\""
+                          "typeString": "literal_string \"ERC1155: ids and amounts length mismatch\""
                         }
                       ],
                       "id": 803,
@@ -6330,9 +6330,9 @@
                         "src": "5499:39:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_stringliteral_2ebdb09900b1383aeb098d89bff2522cbbe175451e7d49b46c57f86956bcffac",
-                          "typeString": "literal_string \"BEP1155: transfer to the zero address\""
+                          "typeString": "literal_string \"ERC1155: transfer to the zero address\""
                         },
-                        "value": "BEP1155: transfer to the zero address"
+                        "value": "ERC1155: transfer to the zero address"
                       }
                     ],
                     "expression": {
@@ -6343,7 +6343,7 @@
                         },
                         {
                           "typeIdentifier": "t_stringliteral_2ebdb09900b1383aeb098d89bff2522cbbe175451e7d49b46c57f86956bcffac",
-                          "typeString": "literal_string \"BEP1155: transfer to the zero address\""
+                          "typeString": "literal_string \"ERC1155: transfer to the zero address\""
                         }
                       ],
                       "id": 812,
@@ -6554,9 +6554,9 @@
                         "src": "5644:52:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_stringliteral_4c302b7d84c541edf164edf90b0a7c8efed1dfdc68eaf88fb90479149ad3b831",
-                          "typeString": "literal_string \"BEP1155: transfer caller is not owner nor approved\""
+                          "typeString": "literal_string \"ERC1155: transfer caller is not owner nor approved\""
                         },
-                        "value": "BEP1155: transfer caller is not owner nor approved"
+                        "value": "ERC1155: transfer caller is not owner nor approved"
                       }
                     ],
                     "expression": {
@@ -6567,7 +6567,7 @@
                         },
                         {
                           "typeIdentifier": "t_stringliteral_4c302b7d84c541edf164edf90b0a7c8efed1dfdc68eaf88fb90479149ad3b831",
-                          "typeString": "literal_string \"BEP1155: transfer caller is not owner nor approved\""
+                          "typeString": "literal_string \"ERC1155: transfer caller is not owner nor approved\""
                         }
                       ],
                       "id": 822,
@@ -7110,9 +7110,9 @@
                               "src": "6046:44:1",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_stringliteral_f7e6fa2a07e9c5c04d0dac1ac4dbc91df128bee99c497f8d078c283b527b5cde",
-                                "typeString": "literal_string \"BEP1155: insufficient balance for transfer\""
+                                "typeString": "literal_string \"ERC1155: insufficient balance for transfer\""
                               },
-                              "value": "BEP1155: insufficient balance for transfer"
+                              "value": "ERC1155: insufficient balance for transfer"
                             }
                           ],
                           "expression": {
@@ -7123,7 +7123,7 @@
                               },
                               {
                                 "typeIdentifier": "t_stringliteral_f7e6fa2a07e9c5c04d0dac1ac4dbc91df128bee99c497f8d078c283b527b5cde",
-                                "typeString": "literal_string \"BEP1155: insufficient balance for transfer\""
+                                "typeString": "literal_string \"ERC1155: insufficient balance for transfer\""
                               }
                             ],
                             "id": 881,
@@ -8066,9 +8066,9 @@
                         "src": "6538:35:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_stringliteral_8ce860ce26fd68cd75163b7b269ab4e3e0169ed629ff233eccf4182102887256",
-                          "typeString": "literal_string \"BEP1155: mint to the zero address\""
+                          "typeString": "literal_string \"ERC1155: mint to the zero address\""
                         },
-                        "value": "BEP1155: mint to the zero address"
+                        "value": "ERC1155: mint to the zero address"
                       }
                     ],
                     "expression": {
@@ -8079,7 +8079,7 @@
                         },
                         {
                           "typeIdentifier": "t_stringliteral_8ce860ce26fd68cd75163b7b269ab4e3e0169ed629ff233eccf4182102887256",
-                          "typeString": "literal_string \"BEP1155: mint to the zero address\""
+                          "typeString": "literal_string \"ERC1155: mint to the zero address\""
                         }
                       ],
                       "id": 937,
@@ -9117,9 +9117,9 @@
                         "src": "7104:35:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_stringliteral_8ce860ce26fd68cd75163b7b269ab4e3e0169ed629ff233eccf4182102887256",
-                          "typeString": "literal_string \"BEP1155: mint to the zero address\""
+                          "typeString": "literal_string \"ERC1155: mint to the zero address\""
                         },
-                        "value": "BEP1155: mint to the zero address"
+                        "value": "ERC1155: mint to the zero address"
                       }
                     ],
                     "expression": {
@@ -9130,7 +9130,7 @@
                         },
                         {
                           "typeIdentifier": "t_stringliteral_8ce860ce26fd68cd75163b7b269ab4e3e0169ed629ff233eccf4182102887256",
-                          "typeString": "literal_string \"BEP1155: mint to the zero address\""
+                          "typeString": "literal_string \"ERC1155: mint to the zero address\""
                         }
                       ],
                       "id": 1013,
@@ -9251,9 +9251,9 @@
                         "src": "7188:42:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_stringliteral_55c28202677e06f2793ee913a5e3e472c853657683309cb68a3a782104c5c605",
-                          "typeString": "literal_string \"BEP1155: ids and amounts length mismatch\""
+                          "typeString": "literal_string \"ERC1155: ids and amounts length mismatch\""
                         },
-                        "value": "BEP1155: ids and amounts length mismatch"
+                        "value": "ERC1155: ids and amounts length mismatch"
                       }
                     ],
                     "expression": {
@@ -9264,7 +9264,7 @@
                         },
                         {
                           "typeIdentifier": "t_stringliteral_55c28202677e06f2793ee913a5e3e472c853657683309cb68a3a782104c5c605",
-                          "typeString": "literal_string \"BEP1155: ids and amounts length mismatch\""
+                          "typeString": "literal_string \"ERC1155: ids and amounts length mismatch\""
                         }
                       ],
                       "id": 1023,
@@ -10450,9 +10450,9 @@
                         "src": "7750:37:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_stringliteral_4a81acf45fc4cd05d58842399e0522988c586ab6fa1d68baad039faeafefa79b",
-                          "typeString": "literal_string \"BEP1155: burn from the zero address\""
+                          "typeString": "literal_string \"ERC1155: burn from the zero address\""
                         },
-                        "value": "BEP1155: burn from the zero address"
+                        "value": "ERC1155: burn from the zero address"
                       }
                     ],
                     "expression": {
@@ -10463,7 +10463,7 @@
                         },
                         {
                           "typeIdentifier": "t_stringliteral_4a81acf45fc4cd05d58842399e0522988c586ab6fa1d68baad039faeafefa79b",
-                          "typeString": "literal_string \"BEP1155: burn from the zero address\""
+                          "typeString": "literal_string \"ERC1155: burn from the zero address\""
                         }
                       ],
                       "id": 1107,
@@ -10978,9 +10978,9 @@
                         "src": "8048:38:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_stringliteral_1375a863bc482712a1dc298a61e513eeeb3403ec96ab4ff08ee9c385bcf5b953",
-                          "typeString": "literal_string \"BEP1155: burn amount exceeds balance\""
+                          "typeString": "literal_string \"ERC1155: burn amount exceeds balance\""
                         },
-                        "value": "BEP1155: burn amount exceeds balance"
+                        "value": "ERC1155: burn amount exceeds balance"
                       }
                     ],
                     "expression": {
@@ -10991,7 +10991,7 @@
                         },
                         {
                           "typeIdentifier": "t_stringliteral_1375a863bc482712a1dc298a61e513eeeb3403ec96ab4ff08ee9c385bcf5b953",
-                          "typeString": "literal_string \"BEP1155: burn amount exceeds balance\""
+                          "typeString": "literal_string \"ERC1155: burn amount exceeds balance\""
                         }
                       ],
                       "id": 1146,
@@ -11532,9 +11532,9 @@
                         "src": "8374:37:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_stringliteral_4a81acf45fc4cd05d58842399e0522988c586ab6fa1d68baad039faeafefa79b",
-                          "typeString": "literal_string \"BEP1155: burn from the zero address\""
+                          "typeString": "literal_string \"ERC1155: burn from the zero address\""
                         },
-                        "value": "BEP1155: burn from the zero address"
+                        "value": "ERC1155: burn from the zero address"
                       }
                     ],
                     "expression": {
@@ -11545,7 +11545,7 @@
                         },
                         {
                           "typeIdentifier": "t_stringliteral_4a81acf45fc4cd05d58842399e0522988c586ab6fa1d68baad039faeafefa79b",
-                          "typeString": "literal_string \"BEP1155: burn from the zero address\""
+                          "typeString": "literal_string \"ERC1155: burn from the zero address\""
                         }
                       ],
                       "id": 1186,
@@ -11666,9 +11666,9 @@
                         "src": "8460:42:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_stringliteral_55c28202677e06f2793ee913a5e3e472c853657683309cb68a3a782104c5c605",
-                          "typeString": "literal_string \"BEP1155: ids and amounts length mismatch\""
+                          "typeString": "literal_string \"ERC1155: ids and amounts length mismatch\""
                         },
-                        "value": "BEP1155: ids and amounts length mismatch"
+                        "value": "ERC1155: ids and amounts length mismatch"
                       }
                     ],
                     "expression": {
@@ -11679,7 +11679,7 @@
                         },
                         {
                           "typeIdentifier": "t_stringliteral_55c28202677e06f2793ee913a5e3e472c853657683309cb68a3a782104c5c605",
-                          "typeString": "literal_string \"BEP1155: ids and amounts length mismatch\""
+                          "typeString": "literal_string \"ERC1155: ids and amounts length mismatch\""
                         }
                       ],
                       "id": 1196,
@@ -12274,9 +12274,9 @@
                               "src": "8858:38:1",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_stringliteral_1375a863bc482712a1dc298a61e513eeeb3403ec96ab4ff08ee9c385bcf5b953",
-                                "typeString": "literal_string \"BEP1155: burn amount exceeds balance\""
+                                "typeString": "literal_string \"ERC1155: burn amount exceeds balance\""
                               },
-                              "value": "BEP1155: burn amount exceeds balance"
+                              "value": "ERC1155: burn amount exceeds balance"
                             }
                           ],
                           "expression": {
@@ -12287,7 +12287,7 @@
                               },
                               {
                                 "typeIdentifier": "t_stringliteral_1375a863bc482712a1dc298a61e513eeeb3403ec96ab4ff08ee9c385bcf5b953",
-                                "typeString": "literal_string \"BEP1155: burn amount exceeds balance\""
+                                "typeString": "literal_string \"ERC1155: burn amount exceeds balance\""
                               }
                             ],
                             "id": 1253,
@@ -13208,14 +13208,14 @@
                                               }
                                             ],
                                             "id": 1334,
-                                            "name": "IBEP1155Receiver",
+                                            "name": "IERC1155Receiver",
                                             "nodeType": "Identifier",
                                             "overloadedDeclarations": [],
                                             "referencedDeclaration": 467,
                                             "src": "9684:16:1",
                                             "typeDescriptions": {
-                                              "typeIdentifier": "t_type$_t_contract$_IBEP1155Receiver_$467_$",
-                                              "typeString": "type(contract IBEP1155Receiver)"
+                                              "typeIdentifier": "t_type$_t_contract$_IERC1155Receiver_$467_$",
+                                              "typeString": "type(contract IERC1155Receiver)"
                                             }
                                           },
                                           "id": 1336,
@@ -13229,8 +13229,8 @@
                                           "src": "9684:20:1",
                                           "tryCall": false,
                                           "typeDescriptions": {
-                                            "typeIdentifier": "t_contract$_IBEP1155Receiver_$467",
-                                            "typeString": "contract IBEP1155Receiver"
+                                            "typeIdentifier": "t_contract$_IERC1155Receiver_$467",
+                                            "typeString": "contract IERC1155Receiver"
                                           }
                                         },
                                         "id": 1337,
@@ -13238,7 +13238,7 @@
                                         "isLValue": false,
                                         "isPure": false,
                                         "lValueRequested": false,
-                                        "memberName": "onBEP1155Received",
+                                        "memberName": "onERC1155Received",
                                         "nodeType": "MemberAccess",
                                         "referencedDeclaration": 449,
                                         "src": "9684:38:1",
@@ -13289,16 +13289,16 @@
                                               "src": "9762:42:1",
                                               "typeDescriptions": {
                                                 "typeIdentifier": "t_stringliteral_a3e64c73901e54820647c7696969ffe619d215bd5161c83edea4fc7a9d336bcb",
-                                                "typeString": "literal_string \"BEP1155: BEP1155Receiver rejected tokens\""
+                                                "typeString": "literal_string \"ERC1155: ERC1155Receiver rejected tokens\""
                                               },
-                                              "value": "BEP1155: BEP1155Receiver rejected tokens"
+                                              "value": "ERC1155: ERC1155Receiver rejected tokens"
                                             }
                                           ],
                                           "expression": {
                                             "argumentTypes": [
                                               {
                                                 "typeIdentifier": "t_stringliteral_a3e64c73901e54820647c7696969ffe619d215bd5161c83edea4fc7a9d336bcb",
-                                                "typeString": "literal_string \"BEP1155: BEP1155Receiver rejected tokens\""
+                                                "typeString": "literal_string \"ERC1155: ERC1155Receiver rejected tokens\""
                                               }
                                             ],
                                             "id": 1340,
@@ -13500,16 +13500,16 @@
                                         "src": "9952:54:1",
                                         "typeDescriptions": {
                                           "typeIdentifier": "t_stringliteral_203532b9741cc4fbaf5c830a670af3bc90d30aad82520564c1b966fc67fbe043",
-                                          "typeString": "literal_string \"BEP1155: transfer to non BEP1155Receiver implementer\""
+                                          "typeString": "literal_string \"ERC1155: transfer to non ERC1155Receiver implementer\""
                                         },
-                                        "value": "BEP1155: transfer to non BEP1155Receiver implementer"
+                                        "value": "ERC1155: transfer to non ERC1155Receiver implementer"
                                       }
                                     ],
                                     "expression": {
                                       "argumentTypes": [
                                         {
                                           "typeIdentifier": "t_stringliteral_203532b9741cc4fbaf5c830a670af3bc90d30aad82520564c1b966fc67fbe043",
-                                          "typeString": "literal_string \"BEP1155: transfer to non BEP1155Receiver implementer\""
+                                          "typeString": "literal_string \"ERC1155: transfer to non ERC1155Receiver implementer\""
                                         }
                                       ],
                                       "id": 1357,
@@ -13662,14 +13662,14 @@
                                   }
                                 ],
                                 "id": 1320,
-                                "name": "IBEP1155Receiver",
+                                "name": "IERC1155Receiver",
                                 "nodeType": "Identifier",
                                 "overloadedDeclarations": [],
                                 "referencedDeclaration": 467,
                                 "src": "9551:16:1",
                                 "typeDescriptions": {
-                                  "typeIdentifier": "t_type$_t_contract$_IBEP1155Receiver_$467_$",
-                                  "typeString": "type(contract IBEP1155Receiver)"
+                                  "typeIdentifier": "t_type$_t_contract$_IERC1155Receiver_$467_$",
+                                  "typeString": "type(contract IERC1155Receiver)"
                                 }
                               },
                               "id": 1322,
@@ -13683,8 +13683,8 @@
                               "src": "9551:20:1",
                               "tryCall": false,
                               "typeDescriptions": {
-                                "typeIdentifier": "t_contract$_IBEP1155Receiver_$467",
-                                "typeString": "contract IBEP1155Receiver"
+                                "typeIdentifier": "t_contract$_IERC1155Receiver_$467",
+                                "typeString": "contract IERC1155Receiver"
                               }
                             },
                             "id": 1323,
@@ -13692,7 +13692,7 @@
                             "isLValue": false,
                             "isPure": false,
                             "lValueRequested": false,
-                            "memberName": "onBEP1155Received",
+                            "memberName": "onERC1155Received",
                             "nodeType": "MemberAccess",
                             "referencedDeclaration": 449,
                             "src": "9551:38:1",
@@ -14027,14 +14027,14 @@
                                               }
                                             ],
                                             "id": 1401,
-                                            "name": "IBEP1155Receiver",
+                                            "name": "IERC1155Receiver",
                                             "nodeType": "Identifier",
                                             "overloadedDeclarations": [],
                                             "referencedDeclaration": 467,
                                             "src": "10463:16:1",
                                             "typeDescriptions": {
-                                              "typeIdentifier": "t_type$_t_contract$_IBEP1155Receiver_$467_$",
-                                              "typeString": "type(contract IBEP1155Receiver)"
+                                              "typeIdentifier": "t_type$_t_contract$_IERC1155Receiver_$467_$",
+                                              "typeString": "type(contract IERC1155Receiver)"
                                             }
                                           },
                                           "id": 1403,
@@ -14048,8 +14048,8 @@
                                           "src": "10463:20:1",
                                           "tryCall": false,
                                           "typeDescriptions": {
-                                            "typeIdentifier": "t_contract$_IBEP1155Receiver_$467",
-                                            "typeString": "contract IBEP1155Receiver"
+                                            "typeIdentifier": "t_contract$_IERC1155Receiver_$467",
+                                            "typeString": "contract IERC1155Receiver"
                                           }
                                         },
                                         "id": 1404,
@@ -14057,7 +14057,7 @@
                                         "isLValue": false,
                                         "isPure": false,
                                         "lValueRequested": false,
-                                        "memberName": "onBEP1155BatchReceived",
+                                        "memberName": "onERC1155BatchReceived",
                                         "nodeType": "MemberAccess",
                                         "referencedDeclaration": 466,
                                         "src": "10463:43:1",
@@ -14108,16 +14108,16 @@
                                               "src": "10546:42:1",
                                               "typeDescriptions": {
                                                 "typeIdentifier": "t_stringliteral_a3e64c73901e54820647c7696969ffe619d215bd5161c83edea4fc7a9d336bcb",
-                                                "typeString": "literal_string \"BEP1155: BEP1155Receiver rejected tokens\""
+                                                "typeString": "literal_string \"ERC1155: ERC1155Receiver rejected tokens\""
                                               },
-                                              "value": "BEP1155: BEP1155Receiver rejected tokens"
+                                              "value": "ERC1155: ERC1155Receiver rejected tokens"
                                             }
                                           ],
                                           "expression": {
                                             "argumentTypes": [
                                               {
                                                 "typeIdentifier": "t_stringliteral_a3e64c73901e54820647c7696969ffe619d215bd5161c83edea4fc7a9d336bcb",
-                                                "typeString": "literal_string \"BEP1155: BEP1155Receiver rejected tokens\""
+                                                "typeString": "literal_string \"ERC1155: ERC1155Receiver rejected tokens\""
                                               }
                                             ],
                                             "id": 1407,
@@ -14319,16 +14319,16 @@
                                         "src": "10736:54:1",
                                         "typeDescriptions": {
                                           "typeIdentifier": "t_stringliteral_203532b9741cc4fbaf5c830a670af3bc90d30aad82520564c1b966fc67fbe043",
-                                          "typeString": "literal_string \"BEP1155: transfer to non BEP1155Receiver implementer\""
+                                          "typeString": "literal_string \"ERC1155: transfer to non ERC1155Receiver implementer\""
                                         },
-                                        "value": "BEP1155: transfer to non BEP1155Receiver implementer"
+                                        "value": "ERC1155: transfer to non ERC1155Receiver implementer"
                                       }
                                     ],
                                     "expression": {
                                       "argumentTypes": [
                                         {
                                           "typeIdentifier": "t_stringliteral_203532b9741cc4fbaf5c830a670af3bc90d30aad82520564c1b966fc67fbe043",
-                                          "typeString": "literal_string \"BEP1155: transfer to non BEP1155Receiver implementer\""
+                                          "typeString": "literal_string \"ERC1155: transfer to non ERC1155Receiver implementer\""
                                         }
                                       ],
                                       "id": 1424,
@@ -14481,14 +14481,14 @@
                                   }
                                 ],
                                 "id": 1387,
-                                "name": "IBEP1155Receiver",
+                                "name": "IERC1155Receiver",
                                 "nodeType": "Identifier",
                                 "overloadedDeclarations": [],
                                 "referencedDeclaration": 467,
                                 "src": "10323:16:1",
                                 "typeDescriptions": {
-                                  "typeIdentifier": "t_type$_t_contract$_IBEP1155Receiver_$467_$",
-                                  "typeString": "type(contract IBEP1155Receiver)"
+                                  "typeIdentifier": "t_type$_t_contract$_IERC1155Receiver_$467_$",
+                                  "typeString": "type(contract IERC1155Receiver)"
                                 }
                               },
                               "id": 1389,
@@ -14502,8 +14502,8 @@
                               "src": "10323:20:1",
                               "tryCall": false,
                               "typeDescriptions": {
-                                "typeIdentifier": "t_contract$_IBEP1155Receiver_$467",
-                                "typeString": "contract IBEP1155Receiver"
+                                "typeIdentifier": "t_contract$_IERC1155Receiver_$467",
+                                "typeString": "contract IERC1155Receiver"
                               }
                             },
                             "id": 1390,
@@ -14511,7 +14511,7 @@
                             "isLValue": false,
                             "isPure": false,
                             "lValueRequested": false,
-                            "memberName": "onBEP1155BatchReceived",
+                            "memberName": "onERC1155BatchReceived",
                             "nodeType": "MemberAccess",
                             "referencedDeclaration": 466,
                             "src": "10323:43:1",
@@ -15097,22 +15097,22 @@
                           "arguments": [
                             {
                               "id": 1473,
-                              "name": "IBEP165",
+                              "name": "IERC165",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
                               "referencedDeclaration": 306,
                               "src": "11164:7:1",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_type$_t_contract$_IBEP165_$306_$",
-                                "typeString": "type(contract IBEP165)"
+                                "typeIdentifier": "t_type$_t_contract$_IERC165_$306_$",
+                                "typeString": "type(contract IERC165)"
                               }
                             }
                           ],
                           "expression": {
                             "argumentTypes": [
                               {
-                                "typeIdentifier": "t_type$_t_contract$_IBEP165_$306_$",
-                                "typeString": "type(contract IBEP165)"
+                                "typeIdentifier": "t_type$_t_contract$_IERC165_$306_$",
+                                "typeString": "type(contract IERC165)"
                               }
                             ],
                             "id": 1472,
@@ -15137,8 +15137,8 @@
                           "src": "11159:13:1",
                           "tryCall": false,
                           "typeDescriptions": {
-                            "typeIdentifier": "t_magic_meta_type_t_contract$_IBEP165_$306",
-                            "typeString": "type(contract IBEP165)"
+                            "typeIdentifier": "t_magic_meta_type_t_contract$_IERC165_$306",
+                            "typeString": "type(contract IERC165)"
                           }
                         },
                         "id": 1475,
@@ -15191,22 +15191,22 @@
                           "arguments": [
                             {
                               "id": 1479,
-                              "name": "IBEP1155MetadataURI",
+                              "name": "IERC1155MetadataURI",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
                               "referencedDeclaration": 432,
                               "src": "11220:19:1",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_type$_t_contract$_IBEP1155MetadataURI_$432_$",
-                                "typeString": "type(contract IBEP1155MetadataURI)"
+                                "typeIdentifier": "t_type$_t_contract$_IERC1155MetadataURI_$432_$",
+                                "typeString": "type(contract IERC1155MetadataURI)"
                               }
                             }
                           ],
                           "expression": {
                             "argumentTypes": [
                               {
-                                "typeIdentifier": "t_type$_t_contract$_IBEP1155MetadataURI_$432_$",
-                                "typeString": "type(contract IBEP1155MetadataURI)"
+                                "typeIdentifier": "t_type$_t_contract$_IERC1155MetadataURI_$432_$",
+                                "typeString": "type(contract IERC1155MetadataURI)"
                               }
                             ],
                             "id": 1478,
@@ -15231,8 +15231,8 @@
                           "src": "11215:25:1",
                           "tryCall": false,
                           "typeDescriptions": {
-                            "typeIdentifier": "t_magic_meta_type_t_contract$_IBEP1155MetadataURI_$432",
-                            "typeString": "type(contract IBEP1155MetadataURI)"
+                            "typeIdentifier": "t_magic_meta_type_t_contract$_IERC1155MetadataURI_$432",
+                            "typeString": "type(contract IERC1155MetadataURI)"
                           }
                         },
                         "id": 1481,
@@ -15280,13 +15280,13 @@
               "overrides": [
                 {
                   "id": 1466,
-                  "name": "IBEP165",
+                  "name": "IERC165",
                   "nodeType": "UserDefinedTypeName",
                   "referencedDeclaration": 306,
                   "src": "11103:7:1",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_contract$_IBEP165_$306",
-                    "typeString": "contract IBEP165"
+                    "typeIdentifier": "t_contract$_IERC165_$306",
+                    "typeString": "contract IERC165"
                   }
                 }
               ],
@@ -15374,13 +15374,13 @@
           {
             "baseName": {
               "id": 1488,
-              "name": "ProofToken1155",
+              "name": "RoseApe1155",
               "nodeType": "UserDefinedTypeName",
               "referencedDeclaration": 1487,
               "src": "11295:14:1",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_ProofToken1155_$1487",
-                "typeString": "contract ProofToken1155"
+                "typeIdentifier": "t_contract$_RoseApe1155_$1487",
+                "typeString": "contract RoseApe1155"
               }
             },
             "id": 1489,
@@ -15404,7 +15404,7 @@
           421,
           306
         ],
-        "name": "ProofTokenBEP1155",
+        "name": "RoseApeERC1155",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
@@ -15533,7 +15533,7 @@
             "visibility": "public"
           },
           {
-            "canonicalName": "ProofTokenBEP1155.Info",
+            "canonicalName": "RoseApeERC1155.Info",
             "id": 1507,
             "members": [
               {
@@ -15660,7 +15660,7 @@
             "storageLocation": "default",
             "typeDescriptions": {
               "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_Info_$1507_storage_$",
-              "typeString": "mapping(uint256 => struct ProofTokenBEP1155.Info)"
+              "typeString": "mapping(uint256 => struct RoseApeERC1155.Info)"
             },
             "typeName": {
               "id": 1510,
@@ -15678,7 +15678,7 @@
               "src": "11545:24:1",
               "typeDescriptions": {
                 "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_Info_$1507_storage_$",
-                "typeString": "mapping(uint256 => struct ProofTokenBEP1155.Info)"
+                "typeString": "mapping(uint256 => struct RoseApeERC1155.Info)"
               },
               "valueType": {
                 "id": 1509,
@@ -15688,7 +15688,7 @@
                 "src": "11564:4:1",
                 "typeDescriptions": {
                   "typeIdentifier": "t_struct$_Info_$1507_storage_ptr",
-                  "typeString": "struct ProofTokenBEP1155.Info"
+                  "typeString": "struct RoseApeERC1155.Info"
                 }
               }
             },
@@ -15967,14 +15967,14 @@
                 "id": 1527,
                 "modifierName": {
                   "id": 1525,
-                  "name": "ProofToken1155",
+                  "name": "RoseApe1155",
                   "nodeType": "Identifier",
                   "overloadedDeclarations": [],
                   "referencedDeclaration": 1487,
                   "src": "11722:14:1",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_type$_t_contract$_ProofToken1155_$1487_$",
-                    "typeString": "type(contract ProofToken1155)"
+                    "typeIdentifier": "t_type$_t_contract$_RoseApe1155_$1487_$",
+                    "typeString": "type(contract RoseApe1155)"
                   }
                 },
                 "nodeType": "ModifierInvocation",
@@ -16172,7 +16172,7 @@
                       "storageLocation": "storage",
                       "typeDescriptions": {
                         "typeIdentifier": "t_struct$_Info_$1507_storage_ptr",
-                        "typeString": "struct ProofTokenBEP1155.Info"
+                        "typeString": "struct RoseApeERC1155.Info"
                       },
                       "typeName": {
                         "id": 1566,
@@ -16182,7 +16182,7 @@
                         "src": "12140:4:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_struct$_Info_$1507_storage_ptr",
-                          "typeString": "struct ProofTokenBEP1155.Info"
+                          "typeString": "struct RoseApeERC1155.Info"
                         }
                       },
                       "visibility": "internal"
@@ -16199,7 +16199,7 @@
                       "src": "12157:4:1",
                       "typeDescriptions": {
                         "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_Info_$1507_storage_$",
-                        "typeString": "mapping(uint256 => struct ProofTokenBEP1155.Info storage ref)"
+                        "typeString": "mapping(uint256 => struct RoseApeERC1155.Info storage ref)"
                       }
                     },
                     "id": 1570,
@@ -16223,7 +16223,7 @@
                     "src": "12157:13:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_struct$_Info_$1507_storage",
-                      "typeString": "struct ProofTokenBEP1155.Info storage ref"
+                      "typeString": "struct RoseApeERC1155.Info storage ref"
                     }
                   },
                   "nodeType": "VariableDeclarationStatement",
@@ -16246,7 +16246,7 @@
                         "src": "12180:1:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_struct$_Info_$1507_storage_ptr",
-                          "typeString": "struct ProofTokenBEP1155.Info storage pointer"
+                          "typeString": "struct RoseApeERC1155.Info storage pointer"
                         }
                       },
                       "id": 1574,
@@ -16348,7 +16348,7 @@
                         "src": "12211:1:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_struct$_Info_$1507_storage_ptr",
-                          "typeString": "struct ProofTokenBEP1155.Info storage pointer"
+                          "typeString": "struct RoseApeERC1155.Info storage pointer"
                         }
                       },
                       "id": 1583,
@@ -16450,7 +16450,7 @@
                         "src": "12256:1:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_struct$_Info_$1507_storage_ptr",
-                          "typeString": "struct ProofTokenBEP1155.Info storage pointer"
+                          "typeString": "struct RoseApeERC1155.Info storage pointer"
                         }
                       },
                       "id": 1592,
@@ -16552,7 +16552,7 @@
                         "src": "12287:1:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_struct$_Info_$1507_storage_ptr",
-                          "typeString": "struct ProofTokenBEP1155.Info storage pointer"
+                          "typeString": "struct RoseApeERC1155.Info storage pointer"
                         }
                       },
                       "id": 1601,
@@ -17071,7 +17071,7 @@
   },
   "legacyAST": {
     "attributes": {
-      "absolutePath": "/Users/sujith/Desktop/Work/Upwork/NFT_Engine/contracts/ProofTokenBEP1155.sol",
+      "absolutePath": "/Users/sujith/Desktop/Work/Upwork/NFT_Engine/contracts/RoseApeERC1155.sol",
       "exportedSymbols": {
         "Address": [
           295
@@ -17079,22 +17079,22 @@
         "Context": [
           488
         ],
-        "IBEP1155MetadataURI": [
+        "IERC1155MetadataURI": [
           432
         ],
-        "IBEP1155Receiver": [
+        "IERC1155Receiver": [
           467
         ],
-        "IBEP165": [
+        "IERC165": [
           306
         ],
-        "IProofToken1155": [
+        "IRoseApe1155": [
           421
         ],
-        "ProofToken1155": [
+        "RoseApe1155": [
           1487
         ],
-        "ProofTokenBEP1155": [
+        "RoseApeERC1155": [
           1627
         ]
       },
@@ -17143,7 +17143,7 @@
           "linearizedBaseContracts": [
             306
           ],
-          "name": "IBEP165",
+          "name": "IERC165",
           "scope": 1628
         },
         "children": [
@@ -17251,7 +17251,7 @@
             421,
             306
           ],
-          "name": "IProofToken1155",
+          "name": "IRoseApe1155",
           "scope": 1628
         },
         "children": [
@@ -17260,9 +17260,9 @@
             "children": [
               {
                 "attributes": {
-                  "name": "IBEP165",
+                  "name": "IERC165",
                   "referencedDeclaration": 306,
-                  "type": "contract IBEP165"
+                  "type": "contract IERC165"
                 },
                 "id": 307,
                 "name": "UserDefinedTypeName",
@@ -18711,7 +18711,7 @@
             421,
             306
           ],
-          "name": "IBEP1155MetadataURI",
+          "name": "IERC1155MetadataURI",
           "scope": 1628
         },
         "children": [
@@ -18720,9 +18720,9 @@
             "children": [
               {
                 "attributes": {
-                  "name": "IProofToken1155",
+                  "name": "IRoseApe1155",
                   "referencedDeclaration": 421,
-                  "type": "contract IProofToken1155"
+                  "type": "contract IRoseApe1155"
                 },
                 "id": 422,
                 "name": "UserDefinedTypeName",
@@ -18850,7 +18850,7 @@
             467,
             306
           ],
-          "name": "IBEP1155Receiver",
+          "name": "IERC1155Receiver",
           "scope": 1628
         },
         "children": [
@@ -18859,9 +18859,9 @@
             "children": [
               {
                 "attributes": {
-                  "name": "IBEP165",
+                  "name": "IERC165",
                   "referencedDeclaration": 306,
-                  "type": "contract IBEP165"
+                  "type": "contract IERC165"
                 },
                 "id": 433,
                 "name": "UserDefinedTypeName",
@@ -18881,7 +18881,7 @@
               "modifiers": [
                 null
               ],
-              "name": "onBEP1155Received",
+              "name": "onERC1155Received",
               "scope": 467,
               "stateMutability": "nonpayable",
               "virtual": false,
@@ -19074,7 +19074,7 @@
               "modifiers": [
                 null
               ],
-              "name": "onBEP1155BatchReceived",
+              "name": "onERC1155BatchReceived",
               "scope": 467,
               "stateMutability": "nonpayable",
               "virtual": false,
@@ -19561,7 +19561,7 @@
             421,
             306
           ],
-          "name": "ProofToken1155",
+          "name": "RoseApe1155",
           "scope": 1628
         },
         "children": [
@@ -19570,9 +19570,9 @@
             "children": [
               {
                 "attributes": {
-                  "name": "IProofToken1155",
+                  "name": "IRoseApe1155",
                   "referencedDeclaration": 421,
-                  "type": "contract IProofToken1155"
+                  "type": "contract IRoseApe1155"
                 },
                 "id": 489,
                 "name": "UserDefinedTypeName",
@@ -20311,7 +20311,7 @@
                                 },
                                 {
                                   "typeIdentifier": "t_stringliteral_4b9018c8c5d4c06c2e530b8637d58b2b7cf3540aab4b786ebe68e9c857032e40",
-                                  "typeString": "literal_string \"BEP1155: balance query for the zero address\""
+                                  "typeString": "literal_string \"ERC1155: balance query for the zero address\""
                                 }
                               ],
                               "overloadedDeclarations": [
@@ -20429,8 +20429,8 @@
                               "isPure": true,
                               "lValueRequested": false,
                               "token": "string",
-                              "type": "literal_string \"BEP1155: balance query for the zero address\"",
-                              "value": "BEP1155: balance query for the zero address"
+                              "type": "literal_string \"ERC1155: balance query for the zero address\"",
+                              "value": "ERC1155: balance query for the zero address"
                             },
                             "id": 557,
                             "name": "Literal",
@@ -21472,7 +21472,7 @@
                                 },
                                 {
                                   "typeIdentifier": "t_stringliteral_bb70af4dc8bf7eeac0859c39e4f8546e3bc15ca44f0909b34fb917fa00db24e2",
-                                  "typeString": "literal_string \"BEP1155: setting approval status for self\""
+                                  "typeString": "literal_string \"ERC1155: setting approval status for self\""
                                 }
                               ],
                               "overloadedDeclarations": [
@@ -21566,8 +21566,8 @@
                               "isPure": true,
                               "lValueRequested": false,
                               "token": "string",
-                              "type": "literal_string \"BEP1155: setting approval status for self\"",
-                              "value": "BEP1155: setting approval status for self"
+                              "type": "literal_string \"ERC1155: setting approval status for self\"",
+                              "value": "ERC1155: setting approval status for self"
                             },
                             "id": 643,
                             "name": "Literal",
@@ -22259,7 +22259,7 @@
                                 },
                                 {
                                   "typeIdentifier": "t_stringliteral_2ebdb09900b1383aeb098d89bff2522cbbe175451e7d49b46c57f86956bcffac",
-                                  "typeString": "literal_string \"BEP1155: transfer to the zero address\""
+                                  "typeString": "literal_string \"ERC1155: transfer to the zero address\""
                                 }
                               ],
                               "overloadedDeclarations": [
@@ -22377,8 +22377,8 @@
                               "isPure": true,
                               "lValueRequested": false,
                               "token": "string",
-                              "type": "literal_string \"BEP1155: transfer to the zero address\"",
-                              "value": "BEP1155: transfer to the zero address"
+                              "type": "literal_string \"ERC1155: transfer to the zero address\"",
+                              "value": "ERC1155: transfer to the zero address"
                             },
                             "id": 701,
                             "name": "Literal",
@@ -22420,7 +22420,7 @@
                                 },
                                 {
                                   "typeIdentifier": "t_stringliteral_b696609d7542a43d193ae2b11d86326be5297c5152b80ff3fc14e79b99ff26fb",
-                                  "typeString": "literal_string \"BEP1155: caller is not owner nor approved\""
+                                  "typeString": "literal_string \"ERC1155: caller is not owner nor approved\""
                                 }
                               ],
                               "overloadedDeclarations": [
@@ -22628,8 +22628,8 @@
                               "isPure": true,
                               "lValueRequested": false,
                               "token": "string",
-                              "type": "literal_string \"BEP1155: caller is not owner nor approved\"",
-                              "value": "BEP1155: caller is not owner nor approved"
+                              "type": "literal_string \"ERC1155: caller is not owner nor approved\"",
+                              "value": "ERC1155: caller is not owner nor approved"
                             },
                             "id": 715,
                             "name": "Literal",
@@ -23076,7 +23076,7 @@
                                 },
                                 {
                                   "typeIdentifier": "t_stringliteral_f7e6fa2a07e9c5c04d0dac1ac4dbc91df128bee99c497f8d078c283b527b5cde",
-                                  "typeString": "literal_string \"BEP1155: insufficient balance for transfer\""
+                                  "typeString": "literal_string \"ERC1155: insufficient balance for transfer\""
                                 }
                               ],
                               "overloadedDeclarations": [
@@ -23144,8 +23144,8 @@
                               "isPure": true,
                               "lValueRequested": false,
                               "token": "string",
-                              "type": "literal_string \"BEP1155: insufficient balance for transfer\"",
-                              "value": "BEP1155: insufficient balance for transfer"
+                              "type": "literal_string \"ERC1155: insufficient balance for transfer\"",
+                              "value": "ERC1155: insufficient balance for transfer"
                             },
                             "id": 748,
                             "name": "Literal",
@@ -23905,7 +23905,7 @@
                                 },
                                 {
                                   "typeIdentifier": "t_stringliteral_55c28202677e06f2793ee913a5e3e472c853657683309cb68a3a782104c5c605",
-                                  "typeString": "literal_string \"BEP1155: ids and amounts length mismatch\""
+                                  "typeString": "literal_string \"ERC1155: ids and amounts length mismatch\""
                                 }
                               ],
                               "overloadedDeclarations": [
@@ -24003,8 +24003,8 @@
                               "isPure": true,
                               "lValueRequested": false,
                               "token": "string",
-                              "type": "literal_string \"BEP1155: ids and amounts length mismatch\"",
-                              "value": "BEP1155: ids and amounts length mismatch"
+                              "type": "literal_string \"ERC1155: ids and amounts length mismatch\"",
+                              "value": "ERC1155: ids and amounts length mismatch"
                             },
                             "id": 809,
                             "name": "Literal",
@@ -24046,7 +24046,7 @@
                                 },
                                 {
                                   "typeIdentifier": "t_stringliteral_2ebdb09900b1383aeb098d89bff2522cbbe175451e7d49b46c57f86956bcffac",
-                                  "typeString": "literal_string \"BEP1155: transfer to the zero address\""
+                                  "typeString": "literal_string \"ERC1155: transfer to the zero address\""
                                 }
                               ],
                               "overloadedDeclarations": [
@@ -24164,8 +24164,8 @@
                               "isPure": true,
                               "lValueRequested": false,
                               "token": "string",
-                              "type": "literal_string \"BEP1155: transfer to the zero address\"",
-                              "value": "BEP1155: transfer to the zero address"
+                              "type": "literal_string \"ERC1155: transfer to the zero address\"",
+                              "value": "ERC1155: transfer to the zero address"
                             },
                             "id": 819,
                             "name": "Literal",
@@ -24207,7 +24207,7 @@
                                 },
                                 {
                                   "typeIdentifier": "t_stringliteral_4c302b7d84c541edf164edf90b0a7c8efed1dfdc68eaf88fb90479149ad3b831",
-                                  "typeString": "literal_string \"BEP1155: transfer caller is not owner nor approved\""
+                                  "typeString": "literal_string \"ERC1155: transfer caller is not owner nor approved\""
                                 }
                               ],
                               "overloadedDeclarations": [
@@ -24415,8 +24415,8 @@
                               "isPure": true,
                               "lValueRequested": false,
                               "token": "string",
-                              "type": "literal_string \"BEP1155: transfer caller is not owner nor approved\"",
-                              "value": "BEP1155: transfer caller is not owner nor approved"
+                              "type": "literal_string \"ERC1155: transfer caller is not owner nor approved\"",
+                              "value": "ERC1155: transfer caller is not owner nor approved"
                             },
                             "id": 833,
                             "name": "Literal",
@@ -25094,7 +25094,7 @@
                                         },
                                         {
                                           "typeIdentifier": "t_stringliteral_f7e6fa2a07e9c5c04d0dac1ac4dbc91df128bee99c497f8d078c283b527b5cde",
-                                          "typeString": "literal_string \"BEP1155: insufficient balance for transfer\""
+                                          "typeString": "literal_string \"ERC1155: insufficient balance for transfer\""
                                         }
                                       ],
                                       "overloadedDeclarations": [
@@ -25162,8 +25162,8 @@
                                       "isPure": true,
                                       "lValueRequested": false,
                                       "token": "string",
-                                      "type": "literal_string \"BEP1155: insufficient balance for transfer\"",
-                                      "value": "BEP1155: insufficient balance for transfer"
+                                      "type": "literal_string \"ERC1155: insufficient balance for transfer\"",
+                                      "value": "ERC1155: insufficient balance for transfer"
                                     },
                                     "id": 885,
                                     "name": "Literal",
@@ -25872,7 +25872,7 @@
                                 },
                                 {
                                   "typeIdentifier": "t_stringliteral_8ce860ce26fd68cd75163b7b269ab4e3e0169ed629ff233eccf4182102887256",
-                                  "typeString": "literal_string \"BEP1155: mint to the zero address\""
+                                  "typeString": "literal_string \"ERC1155: mint to the zero address\""
                                 }
                               ],
                               "overloadedDeclarations": [
@@ -25990,8 +25990,8 @@
                               "isPure": true,
                               "lValueRequested": false,
                               "token": "string",
-                              "type": "literal_string \"BEP1155: mint to the zero address\"",
-                              "value": "BEP1155: mint to the zero address"
+                              "type": "literal_string \"ERC1155: mint to the zero address\"",
+                              "value": "ERC1155: mint to the zero address"
                             },
                             "id": 944,
                             "name": "Literal",
@@ -27026,7 +27026,7 @@
                                 },
                                 {
                                   "typeIdentifier": "t_stringliteral_8ce860ce26fd68cd75163b7b269ab4e3e0169ed629ff233eccf4182102887256",
-                                  "typeString": "literal_string \"BEP1155: mint to the zero address\""
+                                  "typeString": "literal_string \"ERC1155: mint to the zero address\""
                                 }
                               ],
                               "overloadedDeclarations": [
@@ -27144,8 +27144,8 @@
                               "isPure": true,
                               "lValueRequested": false,
                               "token": "string",
-                              "type": "literal_string \"BEP1155: mint to the zero address\"",
-                              "value": "BEP1155: mint to the zero address"
+                              "type": "literal_string \"ERC1155: mint to the zero address\"",
+                              "value": "ERC1155: mint to the zero address"
                             },
                             "id": 1020,
                             "name": "Literal",
@@ -27187,7 +27187,7 @@
                                 },
                                 {
                                   "typeIdentifier": "t_stringliteral_55c28202677e06f2793ee913a5e3e472c853657683309cb68a3a782104c5c605",
-                                  "typeString": "literal_string \"BEP1155: ids and amounts length mismatch\""
+                                  "typeString": "literal_string \"ERC1155: ids and amounts length mismatch\""
                                 }
                               ],
                               "overloadedDeclarations": [
@@ -27285,8 +27285,8 @@
                               "isPure": true,
                               "lValueRequested": false,
                               "token": "string",
-                              "type": "literal_string \"BEP1155: ids and amounts length mismatch\"",
-                              "value": "BEP1155: ids and amounts length mismatch"
+                              "type": "literal_string \"ERC1155: ids and amounts length mismatch\"",
+                              "value": "ERC1155: ids and amounts length mismatch"
                             },
                             "id": 1029,
                             "name": "Literal",
@@ -28414,7 +28414,7 @@
                                 },
                                 {
                                   "typeIdentifier": "t_stringliteral_4a81acf45fc4cd05d58842399e0522988c586ab6fa1d68baad039faeafefa79b",
-                                  "typeString": "literal_string \"BEP1155: burn from the zero address\""
+                                  "typeString": "literal_string \"ERC1155: burn from the zero address\""
                                 }
                               ],
                               "overloadedDeclarations": [
@@ -28532,8 +28532,8 @@
                               "isPure": true,
                               "lValueRequested": false,
                               "token": "string",
-                              "type": "literal_string \"BEP1155: burn from the zero address\"",
-                              "value": "BEP1155: burn from the zero address"
+                              "type": "literal_string \"ERC1155: burn from the zero address\"",
+                              "value": "ERC1155: burn from the zero address"
                             },
                             "id": 1114,
                             "name": "Literal",
@@ -29032,7 +29032,7 @@
                                 },
                                 {
                                   "typeIdentifier": "t_stringliteral_1375a863bc482712a1dc298a61e513eeeb3403ec96ab4ff08ee9c385bcf5b953",
-                                  "typeString": "literal_string \"BEP1155: burn amount exceeds balance\""
+                                  "typeString": "literal_string \"ERC1155: burn amount exceeds balance\""
                                 }
                               ],
                               "overloadedDeclarations": [
@@ -29100,8 +29100,8 @@
                               "isPure": true,
                               "lValueRequested": false,
                               "token": "string",
-                              "type": "literal_string \"BEP1155: burn amount exceeds balance\"",
-                              "value": "BEP1155: burn amount exceeds balance"
+                              "type": "literal_string \"ERC1155: burn amount exceeds balance\"",
+                              "value": "ERC1155: burn amount exceeds balance"
                             },
                             "id": 1150,
                             "name": "Literal",
@@ -29598,7 +29598,7 @@
                                 },
                                 {
                                   "typeIdentifier": "t_stringliteral_4a81acf45fc4cd05d58842399e0522988c586ab6fa1d68baad039faeafefa79b",
-                                  "typeString": "literal_string \"BEP1155: burn from the zero address\""
+                                  "typeString": "literal_string \"ERC1155: burn from the zero address\""
                                 }
                               ],
                               "overloadedDeclarations": [
@@ -29716,8 +29716,8 @@
                               "isPure": true,
                               "lValueRequested": false,
                               "token": "string",
-                              "type": "literal_string \"BEP1155: burn from the zero address\"",
-                              "value": "BEP1155: burn from the zero address"
+                              "type": "literal_string \"ERC1155: burn from the zero address\"",
+                              "value": "ERC1155: burn from the zero address"
                             },
                             "id": 1193,
                             "name": "Literal",
@@ -29759,7 +29759,7 @@
                                 },
                                 {
                                   "typeIdentifier": "t_stringliteral_55c28202677e06f2793ee913a5e3e472c853657683309cb68a3a782104c5c605",
-                                  "typeString": "literal_string \"BEP1155: ids and amounts length mismatch\""
+                                  "typeString": "literal_string \"ERC1155: ids and amounts length mismatch\""
                                 }
                               ],
                               "overloadedDeclarations": [
@@ -29857,8 +29857,8 @@
                               "isPure": true,
                               "lValueRequested": false,
                               "token": "string",
-                              "type": "literal_string \"BEP1155: ids and amounts length mismatch\"",
-                              "value": "BEP1155: ids and amounts length mismatch"
+                              "type": "literal_string \"ERC1155: ids and amounts length mismatch\"",
+                              "value": "ERC1155: ids and amounts length mismatch"
                             },
                             "id": 1202,
                             "name": "Literal",
@@ -30588,7 +30588,7 @@
                                         },
                                         {
                                           "typeIdentifier": "t_stringliteral_1375a863bc482712a1dc298a61e513eeeb3403ec96ab4ff08ee9c385bcf5b953",
-                                          "typeString": "literal_string \"BEP1155: burn amount exceeds balance\""
+                                          "typeString": "literal_string \"ERC1155: burn amount exceeds balance\""
                                         }
                                       ],
                                       "overloadedDeclarations": [
@@ -30656,8 +30656,8 @@
                                       "isPure": true,
                                       "lValueRequested": false,
                                       "token": "string",
-                                      "type": "literal_string \"BEP1155: burn amount exceeds balance\"",
-                                      "value": "BEP1155: burn amount exceeds balance"
+                                      "type": "literal_string \"ERC1155: burn amount exceeds balance\"",
+                                      "value": "ERC1155: burn amount exceeds balance"
                                     },
                                     "id": 1257,
                                     "name": "Literal",
@@ -31531,7 +31531,7 @@
                                       "isLValue": false,
                                       "isPure": false,
                                       "lValueRequested": false,
-                                      "member_name": "onBEP1155Received",
+                                      "member_name": "onERC1155Received",
                                       "referencedDeclaration": 449,
                                       "type": "function (address,address,uint256,uint256,bytes memory) external returns (bytes4)"
                                     },
@@ -31547,7 +31547,7 @@
                                             null
                                           ],
                                           "tryCall": false,
-                                          "type": "contract IBEP1155Receiver",
+                                          "type": "contract IERC1155Receiver",
                                           "type_conversion": true
                                         },
                                         "children": [
@@ -31563,8 +31563,8 @@
                                                 null
                                               ],
                                               "referencedDeclaration": 467,
-                                              "type": "type(contract IBEP1155Receiver)",
-                                              "value": "IBEP1155Receiver"
+                                              "type": "type(contract IERC1155Receiver)",
+                                              "value": "IERC1155Receiver"
                                             },
                                             "id": 1320,
                                             "name": "Identifier",
@@ -31749,7 +31749,7 @@
                                                       "isLValue": false,
                                                       "isPure": false,
                                                       "lValueRequested": false,
-                                                      "member_name": "onBEP1155Received",
+                                                      "member_name": "onERC1155Received",
                                                       "referencedDeclaration": 449,
                                                       "type": "function (address,address,uint256,uint256,bytes memory) external returns (bytes4)"
                                                     },
@@ -31765,7 +31765,7 @@
                                                             null
                                                           ],
                                                           "tryCall": false,
-                                                          "type": "contract IBEP1155Receiver",
+                                                          "type": "contract IERC1155Receiver",
                                                           "type_conversion": true
                                                         },
                                                         "children": [
@@ -31781,8 +31781,8 @@
                                                                 null
                                                               ],
                                                               "referencedDeclaration": 467,
-                                                              "type": "type(contract IBEP1155Receiver)",
-                                                              "value": "IBEP1155Receiver"
+                                                              "type": "type(contract IERC1155Receiver)",
+                                                              "value": "IERC1155Receiver"
                                                             },
                                                             "id": 1334,
                                                             "name": "Identifier",
@@ -31845,7 +31845,7 @@
                                                           "argumentTypes": [
                                                             {
                                                               "typeIdentifier": "t_stringliteral_a3e64c73901e54820647c7696969ffe619d215bd5161c83edea4fc7a9d336bcb",
-                                                              "typeString": "literal_string \"BEP1155: BEP1155Receiver rejected tokens\""
+                                                              "typeString": "literal_string \"ERC1155: ERC1155Receiver rejected tokens\""
                                                             }
                                                           ],
                                                           "overloadedDeclarations": [
@@ -31868,8 +31868,8 @@
                                                           "isPure": true,
                                                           "lValueRequested": false,
                                                           "token": "string",
-                                                          "type": "literal_string \"BEP1155: BEP1155Receiver rejected tokens\"",
-                                                          "value": "BEP1155: BEP1155Receiver rejected tokens"
+                                                          "type": "literal_string \"ERC1155: ERC1155Receiver rejected tokens\"",
+                                                          "value": "ERC1155: ERC1155Receiver rejected tokens"
                                                         },
                                                         "id": 1341,
                                                         "name": "Literal",
@@ -32044,7 +32044,7 @@
                                                   "argumentTypes": [
                                                     {
                                                       "typeIdentifier": "t_stringliteral_203532b9741cc4fbaf5c830a670af3bc90d30aad82520564c1b966fc67fbe043",
-                                                      "typeString": "literal_string \"BEP1155: transfer to non BEP1155Receiver implementer\""
+                                                      "typeString": "literal_string \"ERC1155: transfer to non ERC1155Receiver implementer\""
                                                     }
                                                   ],
                                                   "overloadedDeclarations": [
@@ -32067,8 +32067,8 @@
                                                   "isPure": true,
                                                   "lValueRequested": false,
                                                   "token": "string",
-                                                  "type": "literal_string \"BEP1155: transfer to non BEP1155Receiver implementer\"",
-                                                  "value": "BEP1155: transfer to non BEP1155Receiver implementer"
+                                                  "type": "literal_string \"ERC1155: transfer to non ERC1155Receiver implementer\"",
+                                                  "value": "ERC1155: transfer to non ERC1155Receiver implementer"
                                                 },
                                                 "id": 1358,
                                                 "name": "Literal",
@@ -32438,7 +32438,7 @@
                                       "isLValue": false,
                                       "isPure": false,
                                       "lValueRequested": false,
-                                      "member_name": "onBEP1155BatchReceived",
+                                      "member_name": "onERC1155BatchReceived",
                                       "referencedDeclaration": 466,
                                       "type": "function (address,address,uint256[] memory,uint256[] memory,bytes memory) external returns (bytes4)"
                                     },
@@ -32454,7 +32454,7 @@
                                             null
                                           ],
                                           "tryCall": false,
-                                          "type": "contract IBEP1155Receiver",
+                                          "type": "contract IERC1155Receiver",
                                           "type_conversion": true
                                         },
                                         "children": [
@@ -32470,8 +32470,8 @@
                                                 null
                                               ],
                                               "referencedDeclaration": 467,
-                                              "type": "type(contract IBEP1155Receiver)",
-                                              "value": "IBEP1155Receiver"
+                                              "type": "type(contract IERC1155Receiver)",
+                                              "value": "IERC1155Receiver"
                                             },
                                             "id": 1387,
                                             "name": "Identifier",
@@ -32656,7 +32656,7 @@
                                                       "isLValue": false,
                                                       "isPure": false,
                                                       "lValueRequested": false,
-                                                      "member_name": "onBEP1155BatchReceived",
+                                                      "member_name": "onERC1155BatchReceived",
                                                       "referencedDeclaration": 466,
                                                       "type": "function (address,address,uint256[] memory,uint256[] memory,bytes memory) external returns (bytes4)"
                                                     },
@@ -32672,7 +32672,7 @@
                                                             null
                                                           ],
                                                           "tryCall": false,
-                                                          "type": "contract IBEP1155Receiver",
+                                                          "type": "contract IERC1155Receiver",
                                                           "type_conversion": true
                                                         },
                                                         "children": [
@@ -32688,8 +32688,8 @@
                                                                 null
                                                               ],
                                                               "referencedDeclaration": 467,
-                                                              "type": "type(contract IBEP1155Receiver)",
-                                                              "value": "IBEP1155Receiver"
+                                                              "type": "type(contract IERC1155Receiver)",
+                                                              "value": "IERC1155Receiver"
                                                             },
                                                             "id": 1401,
                                                             "name": "Identifier",
@@ -32752,7 +32752,7 @@
                                                           "argumentTypes": [
                                                             {
                                                               "typeIdentifier": "t_stringliteral_a3e64c73901e54820647c7696969ffe619d215bd5161c83edea4fc7a9d336bcb",
-                                                              "typeString": "literal_string \"BEP1155: BEP1155Receiver rejected tokens\""
+                                                              "typeString": "literal_string \"ERC1155: ERC1155Receiver rejected tokens\""
                                                             }
                                                           ],
                                                           "overloadedDeclarations": [
@@ -32775,8 +32775,8 @@
                                                           "isPure": true,
                                                           "lValueRequested": false,
                                                           "token": "string",
-                                                          "type": "literal_string \"BEP1155: BEP1155Receiver rejected tokens\"",
-                                                          "value": "BEP1155: BEP1155Receiver rejected tokens"
+                                                          "type": "literal_string \"ERC1155: ERC1155Receiver rejected tokens\"",
+                                                          "value": "ERC1155: ERC1155Receiver rejected tokens"
                                                         },
                                                         "id": 1408,
                                                         "name": "Literal",
@@ -32951,7 +32951,7 @@
                                                   "argumentTypes": [
                                                     {
                                                       "typeIdentifier": "t_stringliteral_203532b9741cc4fbaf5c830a670af3bc90d30aad82520564c1b966fc67fbe043",
-                                                      "typeString": "literal_string \"BEP1155: transfer to non BEP1155Receiver implementer\""
+                                                      "typeString": "literal_string \"ERC1155: transfer to non ERC1155Receiver implementer\""
                                                     }
                                                   ],
                                                   "overloadedDeclarations": [
@@ -32974,8 +32974,8 @@
                                                   "isPure": true,
                                                   "lValueRequested": false,
                                                   "token": "string",
-                                                  "type": "literal_string \"BEP1155: transfer to non BEP1155Receiver implementer\"",
-                                                  "value": "BEP1155: transfer to non BEP1155Receiver implementer"
+                                                  "type": "literal_string \"ERC1155: transfer to non ERC1155Receiver implementer\"",
+                                                  "value": "ERC1155: transfer to non ERC1155Receiver implementer"
                                                 },
                                                 "id": 1425,
                                                 "name": "Literal",
@@ -33374,9 +33374,9 @@
                 "children": [
                   {
                     "attributes": {
-                      "name": "IBEP165",
+                      "name": "IERC165",
                       "referencedDeclaration": 306,
-                      "type": "contract IBEP165"
+                      "type": "contract IERC165"
                     },
                     "id": 1466,
                     "name": "UserDefinedTypeName",
@@ -33522,7 +33522,7 @@
                                         null
                                       ],
                                       "tryCall": false,
-                                      "type": "type(contract IBEP165)",
+                                      "type": "type(contract IERC165)",
                                       "type_conversion": false
                                     },
                                     "children": [
@@ -33530,8 +33530,8 @@
                                         "attributes": {
                                           "argumentTypes": [
                                             {
-                                              "typeIdentifier": "t_type$_t_contract$_IBEP165_$306_$",
-                                              "typeString": "type(contract IBEP165)"
+                                              "typeIdentifier": "t_type$_t_contract$_IERC165_$306_$",
+                                              "typeString": "type(contract IERC165)"
                                             }
                                           ],
                                           "overloadedDeclarations": [
@@ -33551,8 +33551,8 @@
                                             null
                                           ],
                                           "referencedDeclaration": 306,
-                                          "type": "type(contract IBEP165)",
-                                          "value": "IBEP165"
+                                          "type": "type(contract IERC165)",
+                                          "value": "IERC165"
                                         },
                                         "id": 1473,
                                         "name": "Identifier",
@@ -33621,7 +33621,7 @@
                                         null
                                       ],
                                       "tryCall": false,
-                                      "type": "type(contract IBEP1155MetadataURI)",
+                                      "type": "type(contract IERC1155MetadataURI)",
                                       "type_conversion": false
                                     },
                                     "children": [
@@ -33629,8 +33629,8 @@
                                         "attributes": {
                                           "argumentTypes": [
                                             {
-                                              "typeIdentifier": "t_type$_t_contract$_IBEP1155MetadataURI_$432_$",
-                                              "typeString": "type(contract IBEP1155MetadataURI)"
+                                              "typeIdentifier": "t_type$_t_contract$_IERC1155MetadataURI_$432_$",
+                                              "typeString": "type(contract IERC1155MetadataURI)"
                                             }
                                           ],
                                           "overloadedDeclarations": [
@@ -33650,8 +33650,8 @@
                                             null
                                           ],
                                           "referencedDeclaration": 432,
-                                          "type": "type(contract IBEP1155MetadataURI)",
-                                          "value": "IBEP1155MetadataURI"
+                                          "type": "type(contract IERC1155MetadataURI)",
+                                          "value": "IERC1155MetadataURI"
                                         },
                                         "id": 1479,
                                         "name": "Identifier",
@@ -33715,7 +33715,7 @@
             421,
             306
           ],
-          "name": "ProofTokenBEP1155",
+          "name": "RoseApeERC1155",
           "scope": 1628
         },
         "children": [
@@ -33724,9 +33724,9 @@
             "children": [
               {
                 "attributes": {
-                  "name": "ProofToken1155",
+                  "name": "RoseApe1155",
                   "referencedDeclaration": 1487,
-                  "type": "contract ProofToken1155"
+                  "type": "contract RoseApe1155"
                 },
                 "id": 1488,
                 "name": "UserDefinedTypeName",
@@ -33863,7 +33863,7 @@
           },
           {
             "attributes": {
-              "canonicalName": "ProofTokenBEP1155.Info",
+              "canonicalName": "RoseApeERC1155.Info",
               "name": "Info",
               "scope": 1627,
               "visibility": "public"
@@ -33987,13 +33987,13 @@
               "scope": 1627,
               "stateVariable": true,
               "storageLocation": "default",
-              "type": "mapping(uint256 => struct ProofTokenBEP1155.Info)",
+              "type": "mapping(uint256 => struct RoseApeERC1155.Info)",
               "visibility": "public"
             },
             "children": [
               {
                 "attributes": {
-                  "type": "mapping(uint256 => struct ProofTokenBEP1155.Info)"
+                  "type": "mapping(uint256 => struct RoseApeERC1155.Info)"
                 },
                 "children": [
                   {
@@ -34009,7 +34009,7 @@
                     "attributes": {
                       "name": "Info",
                       "referencedDeclaration": 1507,
-                      "type": "struct ProofTokenBEP1155.Info"
+                      "type": "struct RoseApeERC1155.Info"
                     },
                     "id": 1509,
                     "name": "UserDefinedTypeName",
@@ -34215,8 +34215,8 @@
                         null
                       ],
                       "referencedDeclaration": 1487,
-                      "type": "type(contract ProofToken1155)",
-                      "value": "ProofToken1155"
+                      "type": "type(contract RoseApe1155)",
+                      "value": "RoseApe1155"
                     },
                     "id": 1525,
                     "name": "Identifier",
@@ -34717,7 +34717,7 @@
                           "scope": 1625,
                           "stateVariable": false,
                           "storageLocation": "storage",
-                          "type": "struct ProofTokenBEP1155.Info",
+                          "type": "struct RoseApeERC1155.Info",
                           "visibility": "internal"
                         },
                         "children": [
@@ -34725,7 +34725,7 @@
                             "attributes": {
                               "name": "Info",
                               "referencedDeclaration": 1507,
-                              "type": "struct ProofTokenBEP1155.Info"
+                              "type": "struct RoseApeERC1155.Info"
                             },
                             "id": 1566,
                             "name": "UserDefinedTypeName",
@@ -34742,7 +34742,7 @@
                           "isLValue": true,
                           "isPure": false,
                           "lValueRequested": false,
-                          "type": "struct ProofTokenBEP1155.Info storage ref"
+                          "type": "struct RoseApeERC1155.Info storage ref"
                         },
                         "children": [
                           {
@@ -34751,7 +34751,7 @@
                                 null
                               ],
                               "referencedDeclaration": 1511,
-                              "type": "mapping(uint256 => struct ProofTokenBEP1155.Info storage ref)",
+                              "type": "mapping(uint256 => struct RoseApeERC1155.Info storage ref)",
                               "value": "info"
                             },
                             "id": 1568,
@@ -34810,7 +34810,7 @@
                                     null
                                   ],
                                   "referencedDeclaration": 1567,
-                                  "type": "struct ProofTokenBEP1155.Info storage pointer",
+                                  "type": "struct RoseApeERC1155.Info storage pointer",
                                   "value": "i"
                                 },
                                 "id": 1572,
@@ -34922,7 +34922,7 @@
                                     null
                                   ],
                                   "referencedDeclaration": 1567,
-                                  "type": "struct ProofTokenBEP1155.Info storage pointer",
+                                  "type": "struct RoseApeERC1155.Info storage pointer",
                                   "value": "i"
                                 },
                                 "id": 1581,
@@ -35034,7 +35034,7 @@
                                     null
                                   ],
                                   "referencedDeclaration": 1567,
-                                  "type": "struct ProofTokenBEP1155.Info storage pointer",
+                                  "type": "struct RoseApeERC1155.Info storage pointer",
                                   "value": "i"
                                 },
                                 "id": 1590,
@@ -35146,7 +35146,7 @@
                                     null
                                   ],
                                   "referencedDeclaration": 1567,
-                                  "type": "struct ProofTokenBEP1155.Info storage pointer",
+                                  "type": "struct RoseApeERC1155.Info storage pointer",
                                   "value": "i"
                                 },
                                 "id": 1599,

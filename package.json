@@ -1,7 +1,7 @@
 {
   "name": "nft_engine",
   "version": "1.0.0",
-  "description": "NFT_Minting_Contracts_BEP721_BEP1155",
+  "description": "NFT_Minting_Contracts_ERC721_ERC1155",
   "main": "truffle-config.js",
   "directories": {
     "test": "test"

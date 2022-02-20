@@ -1,11 +1,11 @@
-// const ProofToken = artifacts.require("ProofToken");
+// const RoseApe = artifacts.require("RoseApe");
 
 // module.exports = function (deployer) {
-//   deployer.deploy(ProofToken,"ProofToken","PTN");
+//   deployer.deploy(RoseApe,"RoseApe","PTN");
 // };
 
-const ProofToken = artifacts.require("ProofTokenBEP1155")
+const RoseApe = artifacts.require("RoseApeERC1155")
 
 module.exports = function (deployer) {
-  deployer.deploy(ProofToken,"ProofToken","PTN");
+  deployer.deploy(RoseApe,"RoseApe","PTN");
 };

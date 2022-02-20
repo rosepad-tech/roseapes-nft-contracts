@@ -1,6 +1,237 @@
 {
-  "contractName": "IBEP721Receiver",
+  "contractName": "IRoseApe721",
   "abi": [
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "approved",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "Approval",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "operator",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "bool",
+          "name": "approved",
+          "type": "bool"
+        }
+      ],
+      "name": "ApprovalForAll",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "from",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "Transfer",
+      "type": "event"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes4",
+          "name": "interfaceId",
+          "type": "bytes4"
+        }
+      ],
+      "name": "supportsInterface",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "name",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "symbol",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "totalSupply",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        }
+      ],
+      "name": "balanceOf",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "balance",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "ownerOf",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "from",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "transferFrom",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "approve",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "getApproved",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "operator",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
     {
       "inputs": [
         {
@@ -9,8 +240,73 @@
           "type": "address"
         },
         {
+          "internalType": "bool",
+          "name": "_approved",
+          "type": "bool"
+        }
+      ],
+      "name": "setApprovalForAll",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "operator",
+          "type": "address"
+        }
+      ],
+      "name": "isApprovedForAll",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
           "internalType": "address",
           "name": "from",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "safeTransferFrom",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "from",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "to",
           "type": "address"
         },
         {
@@ -24,19 +320,13 @@
           "type": "bytes"
         }
       ],
-      "name": "onBEP721Received",
-      "outputs": [
-        {
-          "internalType": "bytes4",
-          "name": "",
-          "type": "bytes4"
-        }
-      ],
+      "name": "safeTransferFrom",
+      "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
     }
   ],
-  "metadata": "{\"compiler\":{\"version\":\"0.7.4+commit.3f05b770\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"}],\"name\":\"onBEP721Received\",\"outputs\":[{\"internalType\":\"bytes4\",\"name\":\"\",\"type\":\"bytes4\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"/Users/sujith/Desktop/Work/Upwork/NFT_Engine/contracts/ProofTokenBEP721.sol\":\"IBEP721Receiver\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/Users/sujith/Desktop/Work/Upwork/NFT_Engine/contracts/ProofTokenBEP721.sol\":{\"keccak256\":\"0x8c0c8a764f49b6c95d71a27b69226f3bf3d294c823d45bcbbb662478e8aa2e10\",\"license\":\"UNLICENSED\",\"urls\":[\"bzz-raw://3817b0f71240a54d89f263c09f4cbf980b151d93eb5f00d26ff5028d496d54e1\",\"dweb:/ipfs/Qmeun7ByLiMf9LXmbBNjK2PxpWy2Q2PYetpg1RLrnxDPZN\"]}},\"version\":1}",
+  "metadata": "{\"compiler\":{\"version\":\"0.7.4+commit.3f05b770\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"approved\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"Approval\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"bool\",\"name\":\"approved\",\"type\":\"bool\"}],\"name\":\"ApprovalForAll\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"Transfer\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"approve\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"}],\"name\":\"balanceOf\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"balance\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"getApproved\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"}],\"name\":\"isApprovedForAll\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"name\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"ownerOf\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"safeTransferFrom\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"}],\"name\":\"safeTransferFrom\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"internalType\":\"bool\",\"name\":\"_approved\",\"type\":\"bool\"}],\"name\":\"setApprovalForAll\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"interfaceId\",\"type\":\"bytes4\"}],\"name\":\"supportsInterface\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"symbol\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"totalSupply\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"transferFrom\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"/Users/sujith/Desktop/Work/Upwork/NFT_Engine/contracts/RoseApeERC721.sol\":\"IRoseApe721\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/Users/sujith/Desktop/Work/Upwork/NFT_Engine/contracts/RoseApeERC721.sol\":{\"keccak256\":\"0x8c0c8a764f49b6c95d71a27b69226f3bf3d294c823d45bcbbb662478e8aa2e10\",\"license\":\"UNLICENSED\",\"urls\":[\"bzz-raw://3817b0f71240a54d89f263c09f4cbf980b151d93eb5f00d26ff5028d496d54e1\",\"dweb:/ipfs/Qmeun7ByLiMf9LXmbBNjK2PxpWy2Q2PYetpg1RLrnxDPZN\"]}},\"version\":1}",
   "bytecode": "0x",
   "deployedBytecode": "0x",
   "immutableReferences": {},
@@ -44,21 +334,21 @@
   "deployedGeneratedSources": [],
   "sourceMap": "",
   "deployedSourceMap": "",
-  "source": "// SPDX-License-Identifier: UNLICENSED\npragma solidity <=0.7.4;\n\ninterface IBEP721Receiver {\n    function onBEP721Received(address operator, address from, uint256 tokenId, bytes calldata data) external returns (bytes4);\n}\n\ninterface IBEP165 {\n    function supportsInterface(bytes4 interfaceId) external view returns (bool);\n}\n\n\ninterface IProofToken721 is IBEP165 {\n\n    event Transfer(address indexed from, address indexed to, uint256 indexed tokenId);\n    event Approval(address indexed owner, address indexed approved, uint256 indexed tokenId);\n    event ApprovalForAll(address indexed owner, address indexed operator, bool approved);\n\n    function name() external view returns(string memory);\n    function symbol() external view returns(string memory);\n    function totalSupply() external view returns(string memory);\n    function balanceOf(address owner) external view returns (uint256 balance);\n    function ownerOf(uint256 tokenId) external view returns (address owner);\n    function safeTransferFrom(address from, address to, uint256 tokenId) external;\n    function transferFrom(address from, address to, uint256 tokenId) external;\n    function approve(address to, uint256 tokenId) external;\n    function getApproved(uint256 tokenId) external view returns (address operator);\n    function setApprovalForAll(address operator, bool _approved) external;\n    function isApprovedForAll(address owner, address operator) external view returns (bool);\n    function safeTransferFrom(address from, address to, uint256 tokenId, bytes calldata data) external;\n}\n\n\ncontract ProofToken721 {\n\n     string private _name;\n     string private _symbol;\n     uint256 private _totalSupply;\n\n     struct Info {\n         bytes logoURI;\n         bytes name;\n         bytes description;\n         bytes additionalInfo;\n     }\n\n     mapping(uint256 => address) private _owners;\n     mapping(address => uint256) private _balances;\n     mapping(uint256 => address) private _tokenApprovals;\n     mapping(address => mapping(address => bool)) private _operatorApprovals;\n     mapping(uint256 => Info) private _info;\n\n     event Approval(address indexed from, address indexed to, uint256 tokenId);\n     event ApprovalForAll(address indexed owner, address indexed operator,bool approved);\n     event Transfer(address indexed from, address indexed to, uint256 tokenId);\n    \n     modifier exists(uint256 tokenId){\n        require(_owners[tokenId] != address(0),\"Invalid TokenId\");\n        _;\n     }\n\n     constructor(string memory name_ , string memory symbol_ ){\n         _name = name_;\n         _symbol = symbol_;\n     }\n\n     function name() public view virtual returns(string memory){\n         return _name;\n     }\n\n     function symbol() public view virtual returns(string memory){\n         return _symbol;\n     }\n\n     function totalSupply() public view virtual returns(uint256){\n         return _totalSupply;\n     }\n\n     function balanceOf(address owner) public view virtual returns(uint256){\n         require(\n             owner != address(0), \"Query Error : Zero Address : 01\"\n         );\n         return _balances[owner];\n     }\n\n     function ownerOf(uint256 tokenId) public view virtual returns(address){\n         address owner = _owners[tokenId];\n         require(owner != address(0),\"Query Error : Zero Address : 01\");\n         return owner;\n     }\n\n     function tokenInfo(uint256 tokenId) public view virtual exists(tokenId) returns(string memory, string memory, string memory, string memory){\n        Info storage i = _info[tokenId];\n        return(\n            string(i.logoURI),\n            string(i.name),\n            string(i.description),\n            string(i.additionalInfo)\n        );\n     }\n\n     function approve(address to, uint256 tokenId) public virtual{\n         address owner = _owners[tokenId];\n         require(to != owner, \"Error : Approval to Owner : 02\");\n         require(\n             msg.sender == owner || isApprovedForAll(owner,msg.sender),\n            \"Error Approval : 02\"\n         );\n         _approve(to,tokenId);\n     }\n\n    function _approve(address to, uint256 tokenId) internal virtual{\n         _tokenApprovals[tokenId] = to;\n         emit Approval(ownerOf(tokenId), to, tokenId);\n     }\n\n     function getApproved(uint256 tokenId) public view virtual exists(tokenId) returns(address){\n         return _tokenApprovals[tokenId];\n     }\n\n     function setApprovalForAll(address operator, bool approved) public virtual {\n         require(operator != address(0),\"Error : Zero Address : 01\");\n         _operatorApprovals[msg.sender][operator] = approved;\n         emit ApprovalForAll(msg.sender, operator, approved);\n     }\n\n    function isApprovedForAll(address owner, address operator) public view virtual returns(bool){\n        return _operatorApprovals[owner][operator];\n    }\n\n    function isContract(address account) internal view returns (bool) {\n        uint256 size;\n        /* solhint-disable */\n        assembly { size := extcodesize(account) }\n        return size > 0;\n    }\n\n    function transferFrom(address from, address to,uint256 tokenId) public virtual{\n        require(\n            _isApprovedOrOwner(msg.sender,tokenId),\"Access Error : 03\"\n        );\n        _transfer(from,to,tokenId);\n    }\n\n    function safeTransferFrom(address from, address to, uint256 tokenId) public virtual {\n        safeTransferFrom(from,to,tokenId,\"\");\n    }\n\n    function safeTransferFrom(address from, address to, uint256 tokenId, bytes memory data) public virtual{\n        require(\n            _isApprovedOrOwner(msg.sender,tokenId),\"Access Error : No Owner : 04\"\n        );\n        _safeTransfer(from, to, tokenId, data);\n    }\n\n    function mint(\n        uint256 tokenId, \n        string memory _tLogo, \n        string memory _tName, \n        string memory _tDescription,\n        string memory _additionalInfo\n    ) public virtual {\n        mint(tokenId,_tLogo,_tName,_tDescription,_additionalInfo,\"\");\n    }\n\n    function mint(\n        uint256 tokenId, \n        string memory _tokenLogo, \n        string memory _tokenName, \n        string memory _tokenDescription, \n        string memory _additionalInfo,\n        bytes memory _data\n    ) public virtual {\n        _mint(msg.sender , tokenId, _tokenName, _tokenDescription, _tokenLogo, _additionalInfo);\n        require(\n            _checkOnBEP721Received(address(0), msg.sender , tokenId, _data),\n            \"Error : Unsupported Address\"\n        );\n    }\n\n    function _mint(\n        address to, \n        uint256 tokenId, \n        string memory nameOfToken, \n        string memory descriptionOfToken, \n        string memory logoOfToken,\n        string memory additionalInfo\n    ) internal virtual{\n        require( to != address(0),\"Error : Zero Address : 01\");\n        require( _owners[tokenId] == address(0), \"Error, Already Minted\");\n\n        _beforeTokenTransfer(address(0), to, tokenId);\n\n        _balances[to] += 1;\n        _owners[tokenId] = to;\n        _totalSupply += 1;\n        \n        Info storage i = _info[tokenId];\n        i.name = bytes(nameOfToken);\n        i.description = bytes(descriptionOfToken);\n        i.logoURI = bytes(logoOfToken);\n        i.additionalInfo = bytes(additionalInfo);\n        emit Transfer(address(0),to,tokenId);\n\n    }\n\n    function _safeTransfer(address from, address to, uint256 tokenId, bytes memory _data) internal virtual{\n        _transfer(from,to,tokenId);\n        require(_checkOnBEP721Received(from,to,tokenId,_data),\"Error : Unsupported Contract\");\n    }\n\n    function _transfer(address from, address to, uint256 tokenId) internal virtual {\n        require(ownerOf(tokenId) == from, \"Access Error : No Owner : 04\");\n        require(to != address(0),\"Error : Zero Address : 01\");\n        _beforeTokenTransfer(from, to, tokenId);\n\n        _approve(address(0),tokenId);\n\n        _balances[from] -= 1;\n        _balances[to] += 1;\n        _owners[tokenId] = to;\n\n        emit Transfer(from, to, tokenId);\n    }\n\n    function _isApprovedOrOwner(address spender,uint256 tokenId) internal view virtual exists(tokenId) returns(bool){\n        address owner = ownerOf(tokenId);\n        return(\n            spender == owner || getApproved(tokenId) == spender || isApprovedForAll(owner,spender)\n        );\n    }\n\n    function _checkOnBEP721Received(address from, address to, uint256 tokenId, bytes memory _data)\n        private returns (bool)\n    {\n        if (isContract(to)) {\n            try IBEP721Receiver(to).onBEP721Received(msg.sender, from, tokenId, _data) returns (bytes4 retval) {\n                return retval == IBEP721Receiver(to).onBEP721Received.selector;\n            } catch (bytes memory reason) {\n                if (reason.length == 0) {\n                    revert(\"BEP721: transfer to non BEP721Receiver implementer\");\n                } else {\n                    /* solhint-disable */\n                    assembly {\n                        revert(add(32, reason), mload(reason))\n                    }\n                }\n            }\n        } else {\n            return true;\n        }\n    }\n\n    function _beforeTokenTransfer(address from, address to, uint256 tokenId) internal virtual { }\n\n}\n",
-  "sourcePath": "/Users/sujith/Desktop/Work/Upwork/NFT_Engine/contracts/ProofTokenBEP721.sol",
+  "source": "// SPDX-License-Identifier: UNLICENSED\npragma solidity <=0.7.4;\n\ninterface IERC721Receiver {\n    function onERC721Received(address operator, address from, uint256 tokenId, bytes calldata data) external returns (bytes4);\n}\n\ninterface IERC165 {\n    function supportsInterface(bytes4 interfaceId) external view returns (bool);\n}\n\n\ninterface IRoseApe721 is IERC165 {\n\n    event Transfer(address indexed from, address indexed to, uint256 indexed tokenId);\n    event Approval(address indexed owner, address indexed approved, uint256 indexed tokenId);\n    event ApprovalForAll(address indexed owner, address indexed operator, bool approved);\n\n    function name() external view returns(string memory);\n    function symbol() external view returns(string memory);\n    function totalSupply() external view returns(string memory);\n    function balanceOf(address owner) external view returns (uint256 balance);\n    function ownerOf(uint256 tokenId) external view returns (address owner);\n    function safeTransferFrom(address from, address to, uint256 tokenId) external;\n    function transferFrom(address from, address to, uint256 tokenId) external;\n    function approve(address to, uint256 tokenId) external;\n    function getApproved(uint256 tokenId) external view returns (address operator);\n    function setApprovalForAll(address operator, bool _approved) external;\n    function isApprovedForAll(address owner, address operator) external view returns (bool);\n    function safeTransferFrom(address from, address to, uint256 tokenId, bytes calldata data) external;\n}\n\n\ncontract RoseApe721 {\n\n     string private _name;\n     string private _symbol;\n     uint256 private _totalSupply;\n\n     struct Info {\n         bytes logoURI;\n         bytes name;\n         bytes description;\n         bytes additionalInfo;\n     }\n\n     mapping(uint256 => address) private _owners;\n     mapping(address => uint256) private _balances;\n     mapping(uint256 => address) private _tokenApprovals;\n     mapping(address => mapping(address => bool)) private _operatorApprovals;\n     mapping(uint256 => Info) private _info;\n\n     event Approval(address indexed from, address indexed to, uint256 tokenId);\n     event ApprovalForAll(address indexed owner, address indexed operator,bool approved);\n     event Transfer(address indexed from, address indexed to, uint256 tokenId);\n    \n     modifier exists(uint256 tokenId){\n        require(_owners[tokenId] != address(0),\"Invalid TokenId\");\n        _;\n     }\n\n     constructor(string memory name_ , string memory symbol_ ){\n         _name = name_;\n         _symbol = symbol_;\n     }\n\n     function name() public view virtual returns(string memory){\n         return _name;\n     }\n\n     function symbol() public view virtual returns(string memory){\n         return _symbol;\n     }\n\n     function totalSupply() public view virtual returns(uint256){\n         return _totalSupply;\n     }\n\n     function balanceOf(address owner) public view virtual returns(uint256){\n         require(\n             owner != address(0), \"Query Error : Zero Address : 01\"\n         );\n         return _balances[owner];\n     }\n\n     function ownerOf(uint256 tokenId) public view virtual returns(address){\n         address owner = _owners[tokenId];\n         require(owner != address(0),\"Query Error : Zero Address : 01\");\n         return owner;\n     }\n\n     function tokenInfo(uint256 tokenId) public view virtual exists(tokenId) returns(string memory, string memory, string memory, string memory){\n        Info storage i = _info[tokenId];\n        return(\n            string(i.logoURI),\n            string(i.name),\n            string(i.description),\n            string(i.additionalInfo)\n        );\n     }\n\n     function approve(address to, uint256 tokenId) public virtual{\n         address owner = _owners[tokenId];\n         require(to != owner, \"Error : Approval to Owner : 02\");\n         require(\n             msg.sender == owner || isApprovedForAll(owner,msg.sender),\n            \"Error Approval : 02\"\n         );\n         _approve(to,tokenId);\n     }\n\n    function _approve(address to, uint256 tokenId) internal virtual{\n         _tokenApprovals[tokenId] = to;\n         emit Approval(ownerOf(tokenId), to, tokenId);\n     }\n\n     function getApproved(uint256 tokenId) public view virtual exists(tokenId) returns(address){\n         return _tokenApprovals[tokenId];\n     }\n\n     function setApprovalForAll(address operator, bool approved) public virtual {\n         require(operator != address(0),\"Error : Zero Address : 01\");\n         _operatorApprovals[msg.sender][operator] = approved;\n         emit ApprovalForAll(msg.sender, operator, approved);\n     }\n\n    function isApprovedForAll(address owner, address operator) public view virtual returns(bool){\n        return _operatorApprovals[owner][operator];\n    }\n\n    function isContract(address account) internal view returns (bool) {\n        uint256 size;\n        /* solhint-disable */\n        assembly { size := extcodesize(account) }\n        return size > 0;\n    }\n\n    function transferFrom(address from, address to,uint256 tokenId) public virtual{\n        require(\n            _isApprovedOrOwner(msg.sender,tokenId),\"Access Error : 03\"\n        );\n        _transfer(from,to,tokenId);\n    }\n\n    function safeTransferFrom(address from, address to, uint256 tokenId) public virtual {\n        safeTransferFrom(from,to,tokenId,\"\");\n    }\n\n    function safeTransferFrom(address from, address to, uint256 tokenId, bytes memory data) public virtual{\n        require(\n            _isApprovedOrOwner(msg.sender,tokenId),\"Access Error : No Owner : 04\"\n        );\n        _safeTransfer(from, to, tokenId, data);\n    }\n\n    function mint(\n        uint256 tokenId, \n        string memory _tLogo, \n        string memory _tName, \n        string memory _tDescription,\n        string memory _additionalInfo\n    ) public virtual {\n        mint(tokenId,_tLogo,_tName,_tDescription,_additionalInfo,\"\");\n    }\n\n    function mint(\n        uint256 tokenId, \n        string memory _tokenLogo, \n        string memory _tokenName, \n        string memory _tokenDescription, \n        string memory _additionalInfo,\n        bytes memory _data\n    ) public virtual {\n        _mint(msg.sender , tokenId, _tokenName, _tokenDescription, _tokenLogo, _additionalInfo);\n        require(\n            _checkOnERC721Received(address(0), msg.sender , tokenId, _data),\n            \"Error : Unsupported Address\"\n        );\n    }\n\n    function _mint(\n        address to, \n        uint256 tokenId, \n        string memory nameOfToken, \n        string memory descriptionOfToken, \n        string memory logoOfToken,\n        string memory additionalInfo\n    ) internal virtual{\n        require( to != address(0),\"Error : Zero Address : 01\");\n        require( _owners[tokenId] == address(0), \"Error, Already Minted\");\n\n        _beforeTokenTransfer(address(0), to, tokenId);\n\n        _balances[to] += 1;\n        _owners[tokenId] = to;\n        _totalSupply += 1;\n        \n        Info storage i = _info[tokenId];\n        i.name = bytes(nameOfToken);\n        i.description = bytes(descriptionOfToken);\n        i.logoURI = bytes(logoOfToken);\n        i.additionalInfo = bytes(additionalInfo);\n        emit Transfer(address(0),to,tokenId);\n\n    }\n\n    function _safeTransfer(address from, address to, uint256 tokenId, bytes memory _data) internal virtual{\n        _transfer(from,to,tokenId);\n        require(_checkOnERC721Received(from,to,tokenId,_data),\"Error : Unsupported Contract\");\n    }\n\n    function _transfer(address from, address to, uint256 tokenId) internal virtual {\n        require(ownerOf(tokenId) == from, \"Access Error : No Owner : 04\");\n        require(to != address(0),\"Error : Zero Address : 01\");\n        _beforeTokenTransfer(from, to, tokenId);\n\n        _approve(address(0),tokenId);\n\n        _balances[from] -= 1;\n        _balances[to] += 1;\n        _owners[tokenId] = to;\n\n        emit Transfer(from, to, tokenId);\n    }\n\n    function _isApprovedOrOwner(address spender,uint256 tokenId) internal view virtual exists(tokenId) returns(bool){\n        address owner = ownerOf(tokenId);\n        return(\n            spender == owner || getApproved(tokenId) == spender || isApprovedForAll(owner,spender)\n        );\n    }\n\n    function _checkOnERC721Received(address from, address to, uint256 tokenId, bytes memory _data)\n        private returns (bool)\n    {\n        if (isContract(to)) {\n            try IERC721Receiver(to).onERC721Received(msg.sender, from, tokenId, _data) returns (bytes4 retval) {\n                return retval == IERC721Receiver(to).onERC721Received.selector;\n            } catch (bytes memory reason) {\n                if (reason.length == 0) {\n                    revert(\"ERC721: transfer to non ERC721Receiver implementer\");\n                } else {\n                    /* solhint-disable */\n                    assembly {\n                        revert(add(32, reason), mload(reason))\n                    }\n                }\n            }\n        } else {\n            return true;\n        }\n    }\n\n    function _beforeTokenTransfer(address from, address to, uint256 tokenId) internal virtual { }\n\n}\n",
+  "sourcePath": "/Users/sujith/Desktop/Work/Upwork/NFT_Engine/contracts/RoseApeERC721.sol",
   "ast": {
-    "absolutePath": "/Users/sujith/Desktop/Work/Upwork/NFT_Engine/contracts/ProofTokenBEP721.sol",
+    "absolutePath": "/Users/sujith/Desktop/Work/Upwork/NFT_Engine/contracts/RoseApeERC721.sol",
     "exportedSymbols": {
-      "IBEP165": [
+      "IERC165": [
         1651
       ],
-      "IBEP721Receiver": [
+      "IERC721Receiver": [
         1643
       ],
-      "IProofToken721": [
+      "IRoseApe721": [
         1766
       ],
-      "ProofToken721": [
+      "RoseApe721": [
         2572
       ]
     },
@@ -87,7 +377,7 @@
         "linearizedBaseContracts": [
           1643
         ],
-        "name": "IBEP721Receiver",
+        "name": "IERC721Receiver",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
@@ -96,7 +386,7 @@
             "implemented": false,
             "kind": "function",
             "modifiers": [],
-            "name": "onBEP721Received",
+            "name": "onERC721Received",
             "nodeType": "FunctionDefinition",
             "parameters": {
               "id": 1638,
@@ -264,7 +554,7 @@
         "linearizedBaseContracts": [
           1651
         ],
-        "name": "IBEP165",
+        "name": "IERC165",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
@@ -357,13 +647,13 @@
           {
             "baseName": {
               "id": 1652,
-              "name": "IBEP165",
+              "name": "IERC165",
               "nodeType": "UserDefinedTypeName",
               "referencedDeclaration": 1651,
               "src": "356:7:2",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_IBEP165_$1651",
-                "typeString": "contract IBEP165"
+                "typeIdentifier": "t_contract$_IERC165_$1651",
+                "typeString": "contract IERC165"
               }
             },
             "id": 1653,
@@ -381,7 +671,7 @@
           1766,
           1651
         ],
-        "name": "IProofToken721",
+        "name": "IRoseApe721",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
@@ -1706,7 +1996,7 @@
         "linearizedBaseContracts": [
           2572
         ],
-        "name": "ProofToken721",
+        "name": "RoseApe721",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
@@ -1788,7 +2078,7 @@
             "visibility": "private"
           },
           {
-            "canonicalName": "ProofToken721.Info",
+            "canonicalName": "RoseApe721.Info",
             "id": 1781,
             "members": [
               {
@@ -2115,7 +2405,7 @@
             "storageLocation": "default",
             "typeDescriptions": {
               "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_Info_$1781_storage_$",
-              "typeString": "mapping(uint256 => struct ProofToken721.Info)"
+              "typeString": "mapping(uint256 => struct RoseApe721.Info)"
             },
             "typeName": {
               "id": 1802,
@@ -2133,7 +2423,7 @@
               "src": "2052:24:2",
               "typeDescriptions": {
                 "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_Info_$1781_storage_$",
-                "typeString": "mapping(uint256 => struct ProofToken721.Info)"
+                "typeString": "mapping(uint256 => struct RoseApe721.Info)"
               },
               "valueType": {
                 "id": 1801,
@@ -2143,7 +2433,7 @@
                 "src": "2071:4:2",
                 "typeDescriptions": {
                   "typeIdentifier": "t_struct$_Info_$1781_storage_ptr",
-                  "typeString": "struct ProofToken721.Info"
+                  "typeString": "struct RoseApe721.Info"
                 }
               }
             },
@@ -3719,7 +4009,7 @@
                       "storageLocation": "storage",
                       "typeDescriptions": {
                         "typeIdentifier": "t_struct$_Info_$1781_storage_ptr",
-                        "typeString": "struct ProofToken721.Info"
+                        "typeString": "struct RoseApe721.Info"
                       },
                       "typeName": {
                         "id": 1949,
@@ -3729,7 +4019,7 @@
                         "src": "3492:4:2",
                         "typeDescriptions": {
                           "typeIdentifier": "t_struct$_Info_$1781_storage_ptr",
-                          "typeString": "struct ProofToken721.Info"
+                          "typeString": "struct RoseApe721.Info"
                         }
                       },
                       "visibility": "internal"
@@ -3746,7 +4036,7 @@
                       "src": "3509:5:2",
                       "typeDescriptions": {
                         "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_Info_$1781_storage_$",
-                        "typeString": "mapping(uint256 => struct ProofToken721.Info storage ref)"
+                        "typeString": "mapping(uint256 => struct RoseApe721.Info storage ref)"
                       }
                     },
                     "id": 1953,
@@ -3770,7 +4060,7 @@
                     "src": "3509:14:2",
                     "typeDescriptions": {
                       "typeIdentifier": "t_struct$_Info_$1781_storage",
-                      "typeString": "struct ProofToken721.Info storage ref"
+                      "typeString": "struct RoseApe721.Info storage ref"
                     }
                   },
                   "nodeType": "VariableDeclarationStatement",
@@ -3791,7 +4081,7 @@
                               "src": "3560:1:2",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_struct$_Info_$1781_storage_ptr",
-                                "typeString": "struct ProofToken721.Info storage pointer"
+                                "typeString": "struct RoseApe721.Info storage pointer"
                               }
                             },
                             "id": 1958,
@@ -3862,7 +4152,7 @@
                               "src": "3591:1:2",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_struct$_Info_$1781_storage_ptr",
-                                "typeString": "struct ProofToken721.Info storage pointer"
+                                "typeString": "struct RoseApe721.Info storage pointer"
                               }
                             },
                             "id": 1963,
@@ -3933,7 +4223,7 @@
                               "src": "3619:1:2",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_struct$_Info_$1781_storage_ptr",
-                                "typeString": "struct ProofToken721.Info storage pointer"
+                                "typeString": "struct RoseApe721.Info storage pointer"
                               }
                             },
                             "id": 1968,
@@ -4004,7 +4294,7 @@
                               "src": "3654:1:2",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_struct$_Info_$1781_storage_ptr",
-                                "typeString": "struct ProofToken721.Info storage pointer"
+                                "typeString": "struct RoseApe721.Info storage pointer"
                               }
                             },
                             "id": 1973,
@@ -7662,7 +7952,7 @@
                             }
                           ],
                           "id": 2240,
-                          "name": "_checkOnBEP721Received",
+                          "name": "_checkOnERC721Received",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
                           "referencedDeclaration": 2561,
@@ -8608,7 +8898,7 @@
                       "storageLocation": "storage",
                       "typeDescriptions": {
                         "typeIdentifier": "t_struct$_Info_$1781_storage_ptr",
-                        "typeString": "struct ProofToken721.Info"
+                        "typeString": "struct RoseApe721.Info"
                       },
                       "typeName": {
                         "id": 2316,
@@ -8618,7 +8908,7 @@
                         "src": "6969:4:2",
                         "typeDescriptions": {
                           "typeIdentifier": "t_struct$_Info_$1781_storage_ptr",
-                          "typeString": "struct ProofToken721.Info"
+                          "typeString": "struct RoseApe721.Info"
                         }
                       },
                       "visibility": "internal"
@@ -8635,7 +8925,7 @@
                       "src": "6986:5:2",
                       "typeDescriptions": {
                         "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_Info_$1781_storage_$",
-                        "typeString": "mapping(uint256 => struct ProofToken721.Info storage ref)"
+                        "typeString": "mapping(uint256 => struct RoseApe721.Info storage ref)"
                       }
                     },
                     "id": 2320,
@@ -8659,7 +8949,7 @@
                     "src": "6986:14:2",
                     "typeDescriptions": {
                       "typeIdentifier": "t_struct$_Info_$1781_storage",
-                      "typeString": "struct ProofToken721.Info storage ref"
+                      "typeString": "struct RoseApe721.Info storage ref"
                     }
                   },
                   "nodeType": "VariableDeclarationStatement",
@@ -8682,7 +8972,7 @@
                         "src": "7010:1:2",
                         "typeDescriptions": {
                           "typeIdentifier": "t_struct$_Info_$1781_storage_ptr",
-                          "typeString": "struct ProofToken721.Info storage pointer"
+                          "typeString": "struct RoseApe721.Info storage pointer"
                         }
                       },
                       "id": 2324,
@@ -8784,7 +9074,7 @@
                         "src": "7047:1:2",
                         "typeDescriptions": {
                           "typeIdentifier": "t_struct$_Info_$1781_storage_ptr",
-                          "typeString": "struct ProofToken721.Info storage pointer"
+                          "typeString": "struct RoseApe721.Info storage pointer"
                         }
                       },
                       "id": 2333,
@@ -8886,7 +9176,7 @@
                         "src": "7098:1:2",
                         "typeDescriptions": {
                           "typeIdentifier": "t_struct$_Info_$1781_storage_ptr",
-                          "typeString": "struct ProofToken721.Info storage pointer"
+                          "typeString": "struct RoseApe721.Info storage pointer"
                         }
                       },
                       "id": 2342,
@@ -8988,7 +9278,7 @@
                         "src": "7138:1:2",
                         "typeDescriptions": {
                           "typeIdentifier": "t_struct$_Info_$1781_storage_ptr",
-                          "typeString": "struct ProofToken721.Info storage pointer"
+                          "typeString": "struct RoseApe721.Info storage pointer"
                         }
                       },
                       "id": 2351,
@@ -9555,7 +9845,7 @@
                             }
                           ],
                           "id": 2386,
-                          "name": "_checkOnBEP721Received",
+                          "name": "_checkOnERC721Received",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
                           "referencedDeclaration": 2561,
@@ -11304,14 +11594,14 @@
                                               }
                                             ],
                                             "id": 2528,
-                                            "name": "IBEP721Receiver",
+                                            "name": "IERC721Receiver",
                                             "nodeType": "Identifier",
                                             "overloadedDeclarations": [],
                                             "referencedDeclaration": 1643,
                                             "src": "8536:15:2",
                                             "typeDescriptions": {
-                                              "typeIdentifier": "t_type$_t_contract$_IBEP721Receiver_$1643_$",
-                                              "typeString": "type(contract IBEP721Receiver)"
+                                              "typeIdentifier": "t_type$_t_contract$_IERC721Receiver_$1643_$",
+                                              "typeString": "type(contract IERC721Receiver)"
                                             }
                                           },
                                           "id": 2530,
@@ -11325,8 +11615,8 @@
                                           "src": "8536:19:2",
                                           "tryCall": false,
                                           "typeDescriptions": {
-                                            "typeIdentifier": "t_contract$_IBEP721Receiver_$1643",
-                                            "typeString": "contract IBEP721Receiver"
+                                            "typeIdentifier": "t_contract$_IERC721Receiver_$1643",
+                                            "typeString": "contract IERC721Receiver"
                                           }
                                         },
                                         "id": 2531,
@@ -11334,7 +11624,7 @@
                                         "isLValue": false,
                                         "isPure": false,
                                         "lValueRequested": false,
-                                        "memberName": "onBEP721Received",
+                                        "memberName": "onERC721Received",
                                         "nodeType": "MemberAccess",
                                         "referencedDeclaration": 1642,
                                         "src": "8536:36:2",
@@ -11586,16 +11876,16 @@
                                               "src": "8696:52:2",
                                               "typeDescriptions": {
                                                 "typeIdentifier": "t_stringliteral_cb71ff8d2f7220b40623948658d6c5ae0b73007cd93551fc45f7d2db742908e8",
-                                                "typeString": "literal_string \"BEP721: transfer to non BEP721Receiver implementer\""
+                                                "typeString": "literal_string \"ERC721: transfer to non ERC721Receiver implementer\""
                                               },
-                                              "value": "BEP721: transfer to non BEP721Receiver implementer"
+                                              "value": "ERC721: transfer to non ERC721Receiver implementer"
                                             }
                                           ],
                                           "expression": {
                                             "argumentTypes": [
                                               {
                                                 "typeIdentifier": "t_stringliteral_cb71ff8d2f7220b40623948658d6c5ae0b73007cd93551fc45f7d2db742908e8",
-                                                "typeString": "literal_string \"BEP721: transfer to non BEP721Receiver implementer\""
+                                                "typeString": "literal_string \"ERC721: transfer to non ERC721Receiver implementer\""
                                               }
                                             ],
                                             "id": 2544,
@@ -11782,14 +12072,14 @@
                                   }
                                 ],
                                 "id": 2514,
-                                "name": "IBEP721Receiver",
+                                "name": "IERC721Receiver",
                                 "nodeType": "Identifier",
                                 "overloadedDeclarations": [],
                                 "referencedDeclaration": 1643,
                                 "src": "8406:15:2",
                                 "typeDescriptions": {
-                                  "typeIdentifier": "t_type$_t_contract$_IBEP721Receiver_$1643_$",
-                                  "typeString": "type(contract IBEP721Receiver)"
+                                  "typeIdentifier": "t_type$_t_contract$_IERC721Receiver_$1643_$",
+                                  "typeString": "type(contract IERC721Receiver)"
                                 }
                               },
                               "id": 2516,
@@ -11803,8 +12093,8 @@
                               "src": "8406:19:2",
                               "tryCall": false,
                               "typeDescriptions": {
-                                "typeIdentifier": "t_contract$_IBEP721Receiver_$1643",
-                                "typeString": "contract IBEP721Receiver"
+                                "typeIdentifier": "t_contract$_IERC721Receiver_$1643",
+                                "typeString": "contract IERC721Receiver"
                               }
                             },
                             "id": 2517,
@@ -11812,7 +12102,7 @@
                             "isLValue": false,
                             "isPure": false,
                             "lValueRequested": false,
-                            "memberName": "onBEP721Received",
+                            "memberName": "onERC721Received",
                             "nodeType": "MemberAccess",
                             "referencedDeclaration": 1642,
                             "src": "8406:36:2",
@@ -11849,7 +12139,7 @@
             "implemented": true,
             "kind": "function",
             "modifiers": [],
-            "name": "_checkOnBEP721Received",
+            "name": "_checkOnERC721Received",
             "nodeType": "FunctionDefinition",
             "parameters": {
               "id": 2507,
@@ -12124,18 +12414,18 @@
   },
   "legacyAST": {
     "attributes": {
-      "absolutePath": "/Users/sujith/Desktop/Work/Upwork/NFT_Engine/contracts/ProofTokenBEP721.sol",
+      "absolutePath": "/Users/sujith/Desktop/Work/Upwork/NFT_Engine/contracts/RoseApeERC721.sol",
       "exportedSymbols": {
-        "IBEP165": [
+        "IERC165": [
           1651
         ],
-        "IBEP721Receiver": [
+        "IERC721Receiver": [
           1643
         ],
-        "IProofToken721": [
+        "IRoseApe721": [
           1766
         ],
-        "ProofToken721": [
+        "RoseApe721": [
           2572
         ]
       },
@@ -12169,7 +12459,7 @@
           "linearizedBaseContracts": [
             1643
           ],
-          "name": "IBEP721Receiver",
+          "name": "IERC721Receiver",
           "scope": 2573
         },
         "children": [
@@ -12182,7 +12472,7 @@
               "modifiers": [
                 null
               ],
-              "name": "onBEP721Received",
+              "name": "onERC721Received",
               "scope": 1643,
               "stateMutability": "nonpayable",
               "virtual": false,
@@ -12359,7 +12649,7 @@
           "linearizedBaseContracts": [
             1651
           ],
-          "name": "IBEP165",
+          "name": "IERC165",
           "scope": 2573
         },
         "children": [
@@ -12467,7 +12757,7 @@
             1766,
             1651
           ],
-          "name": "IProofToken721",
+          "name": "IRoseApe721",
           "scope": 2573
         },
         "children": [
@@ -12476,9 +12766,9 @@
             "children": [
               {
                 "attributes": {
-                  "name": "IBEP165",
+                  "name": "IERC165",
                   "referencedDeclaration": 1651,
-                  "type": "contract IBEP165"
+                  "type": "contract IERC165"
                 },
                 "id": 1652,
                 "name": "UserDefinedTypeName",
@@ -13952,7 +14242,7 @@
           "linearizedBaseContracts": [
             2572
           ],
-          "name": "ProofToken721",
+          "name": "RoseApe721",
           "scope": 2573
         },
         "children": [
@@ -14036,7 +14326,7 @@
           },
           {
             "attributes": {
-              "canonicalName": "ProofToken721.Info",
+              "canonicalName": "RoseApe721.Info",
               "name": "Info",
               "scope": 2572,
               "visibility": "public"
@@ -14360,13 +14650,13 @@
               "scope": 2572,
               "stateVariable": true,
               "storageLocation": "default",
-              "type": "mapping(uint256 => struct ProofToken721.Info)",
+              "type": "mapping(uint256 => struct RoseApe721.Info)",
               "visibility": "private"
             },
             "children": [
               {
                 "attributes": {
-                  "type": "mapping(uint256 => struct ProofToken721.Info)"
+                  "type": "mapping(uint256 => struct RoseApe721.Info)"
                 },
                 "children": [
                   {
@@ -14382,7 +14672,7 @@
                     "attributes": {
                       "name": "Info",
                       "referencedDeclaration": 1781,
-                      "type": "struct ProofToken721.Info"
+                      "type": "struct RoseApe721.Info"
                     },
                     "id": 1801,
                     "name": "UserDefinedTypeName",
@@ -16295,7 +16585,7 @@
                           "scope": 1977,
                           "stateVariable": false,
                           "storageLocation": "storage",
-                          "type": "struct ProofToken721.Info",
+                          "type": "struct RoseApe721.Info",
                           "visibility": "internal"
                         },
                         "children": [
@@ -16303,7 +16593,7 @@
                             "attributes": {
                               "name": "Info",
                               "referencedDeclaration": 1781,
-                              "type": "struct ProofToken721.Info"
+                              "type": "struct RoseApe721.Info"
                             },
                             "id": 1949,
                             "name": "UserDefinedTypeName",
@@ -16320,7 +16610,7 @@
                           "isLValue": true,
                           "isPure": false,
                           "lValueRequested": false,
-                          "type": "struct ProofToken721.Info storage ref"
+                          "type": "struct RoseApe721.Info storage ref"
                         },
                         "children": [
                           {
@@ -16329,7 +16619,7 @@
                                 null
                               ],
                               "referencedDeclaration": 1803,
-                              "type": "mapping(uint256 => struct ProofToken721.Info storage ref)",
+                              "type": "mapping(uint256 => struct RoseApe721.Info storage ref)",
                               "value": "_info"
                             },
                             "id": 1951,
@@ -16434,7 +16724,7 @@
                                         null
                                       ],
                                       "referencedDeclaration": 1950,
-                                      "type": "struct ProofToken721.Info storage pointer",
+                                      "type": "struct RoseApe721.Info storage pointer",
                                       "value": "i"
                                     },
                                     "id": 1957,
@@ -16511,7 +16801,7 @@
                                         null
                                       ],
                                       "referencedDeclaration": 1950,
-                                      "type": "struct ProofToken721.Info storage pointer",
+                                      "type": "struct RoseApe721.Info storage pointer",
                                       "value": "i"
                                     },
                                     "id": 1962,
@@ -16588,7 +16878,7 @@
                                         null
                                       ],
                                       "referencedDeclaration": 1950,
-                                      "type": "struct ProofToken721.Info storage pointer",
+                                      "type": "struct RoseApe721.Info storage pointer",
                                       "value": "i"
                                     },
                                     "id": 1967,
@@ -16665,7 +16955,7 @@
                                         null
                                       ],
                                       "referencedDeclaration": 1950,
-                                      "type": "struct ProofToken721.Info storage pointer",
+                                      "type": "struct RoseApe721.Info storage pointer",
                                       "value": "i"
                                     },
                                     "id": 1972,
@@ -20450,7 +20740,7 @@
                                   ],
                                   "referencedDeclaration": 2561,
                                   "type": "function (address,address,uint256,bytes memory) returns (bool)",
-                                  "value": "_checkOnBEP721Received"
+                                  "value": "_checkOnERC721Received"
                                 },
                                 "id": 2240,
                                 "name": "Identifier",
@@ -21514,7 +21804,7 @@
                           "scope": 2367,
                           "stateVariable": false,
                           "storageLocation": "storage",
-                          "type": "struct ProofToken721.Info",
+                          "type": "struct RoseApe721.Info",
                           "visibility": "internal"
                         },
                         "children": [
@@ -21522,7 +21812,7 @@
                             "attributes": {
                               "name": "Info",
                               "referencedDeclaration": 1781,
-                              "type": "struct ProofToken721.Info"
+                              "type": "struct RoseApe721.Info"
                             },
                             "id": 2316,
                             "name": "UserDefinedTypeName",
@@ -21539,7 +21829,7 @@
                           "isLValue": true,
                           "isPure": false,
                           "lValueRequested": false,
-                          "type": "struct ProofToken721.Info storage ref"
+                          "type": "struct RoseApe721.Info storage ref"
                         },
                         "children": [
                           {
@@ -21548,7 +21838,7 @@
                                 null
                               ],
                               "referencedDeclaration": 1803,
-                              "type": "mapping(uint256 => struct ProofToken721.Info storage ref)",
+                              "type": "mapping(uint256 => struct RoseApe721.Info storage ref)",
                               "value": "_info"
                             },
                             "id": 2318,
@@ -21607,7 +21897,7 @@
                                     null
                                   ],
                                   "referencedDeclaration": 2317,
-                                  "type": "struct ProofToken721.Info storage pointer",
+                                  "type": "struct RoseApe721.Info storage pointer",
                                   "value": "i"
                                 },
                                 "id": 2322,
@@ -21719,7 +22009,7 @@
                                     null
                                   ],
                                   "referencedDeclaration": 2317,
-                                  "type": "struct ProofToken721.Info storage pointer",
+                                  "type": "struct RoseApe721.Info storage pointer",
                                   "value": "i"
                                 },
                                 "id": 2331,
@@ -21831,7 +22121,7 @@
                                     null
                                   ],
                                   "referencedDeclaration": 2317,
-                                  "type": "struct ProofToken721.Info storage pointer",
+                                  "type": "struct RoseApe721.Info storage pointer",
                                   "value": "i"
                                 },
                                 "id": 2340,
@@ -21943,7 +22233,7 @@
                                     null
                                   ],
                                   "referencedDeclaration": 2317,
-                                  "type": "struct ProofToken721.Info storage pointer",
+                                  "type": "struct RoseApe721.Info storage pointer",
                                   "value": "i"
                                 },
                                 "id": 2349,
@@ -22494,7 +22784,7 @@
                                   ],
                                   "referencedDeclaration": 2561,
                                   "type": "function (address,address,uint256,bytes memory) returns (bool)",
-                                  "value": "_checkOnBEP721Received"
+                                  "value": "_checkOnERC721Received"
                                 },
                                 "id": 2386,
                                 "name": "Identifier",
@@ -24079,7 +24369,7 @@
               "modifiers": [
                 null
               ],
-              "name": "_checkOnBEP721Received",
+              "name": "_checkOnERC721Received",
               "scope": 2572,
               "stateMutability": "nonpayable",
               "virtual": false,
@@ -24331,7 +24621,7 @@
                                       "isLValue": false,
                                       "isPure": false,
                                       "lValueRequested": false,
-                                      "member_name": "onBEP721Received",
+                                      "member_name": "onERC721Received",
                                       "referencedDeclaration": 1642,
                                       "type": "function (address,address,uint256,bytes memory) external returns (bytes4)"
                                     },
@@ -24347,7 +24637,7 @@
                                             null
                                           ],
                                           "tryCall": false,
-                                          "type": "contract IBEP721Receiver",
+                                          "type": "contract IERC721Receiver",
                                           "type_conversion": true
                                         },
                                         "children": [
@@ -24363,8 +24653,8 @@
                                                 null
                                               ],
                                               "referencedDeclaration": 1643,
-                                              "type": "type(contract IBEP721Receiver)",
-                                              "value": "IBEP721Receiver"
+                                              "type": "type(contract IERC721Receiver)",
+                                              "value": "IERC721Receiver"
                                             },
                                             "id": 2514,
                                             "name": "Identifier",
@@ -24553,7 +24843,7 @@
                                                       "isLValue": false,
                                                       "isPure": false,
                                                       "lValueRequested": false,
-                                                      "member_name": "onBEP721Received",
+                                                      "member_name": "onERC721Received",
                                                       "referencedDeclaration": 1642,
                                                       "type": "function (address,address,uint256,bytes memory) external returns (bytes4)"
                                                     },
@@ -24569,7 +24859,7 @@
                                                             null
                                                           ],
                                                           "tryCall": false,
-                                                          "type": "contract IBEP721Receiver",
+                                                          "type": "contract IERC721Receiver",
                                                           "type_conversion": true
                                                         },
                                                         "children": [
@@ -24585,8 +24875,8 @@
                                                                 null
                                                               ],
                                                               "referencedDeclaration": 1643,
-                                                              "type": "type(contract IBEP721Receiver)",
-                                                              "value": "IBEP721Receiver"
+                                                              "type": "type(contract IERC721Receiver)",
+                                                              "value": "IERC721Receiver"
                                                             },
                                                             "id": 2528,
                                                             "name": "Identifier",
@@ -24768,7 +25058,7 @@
                                                           "argumentTypes": [
                                                             {
                                                               "typeIdentifier": "t_stringliteral_cb71ff8d2f7220b40623948658d6c5ae0b73007cd93551fc45f7d2db742908e8",
-                                                              "typeString": "literal_string \"BEP721: transfer to non BEP721Receiver implementer\""
+                                                              "typeString": "literal_string \"ERC721: transfer to non ERC721Receiver implementer\""
                                                             }
                                                           ],
                                                           "overloadedDeclarations": [
@@ -24791,8 +25081,8 @@
                                                           "isPure": true,
                                                           "lValueRequested": false,
                                                           "token": "string",
-                                                          "type": "literal_string \"BEP721: transfer to non BEP721Receiver implementer\"",
-                                                          "value": "BEP721: transfer to non BEP721Receiver implementer"
+                                                          "type": "literal_string \"ERC721: transfer to non ERC721Receiver implementer\"",
+                                                          "value": "ERC721: transfer to non ERC721Receiver implementer"
                                                         },
                                                         "id": 2545,
                                                         "name": "Literal",
@@ -25063,7 +25353,7 @@
   },
   "networks": {},
   "schemaVersion": "3.3.4",
-  "updatedAt": "2021-04-05T19:56:14.862Z",
+  "updatedAt": "2021-04-05T19:56:14.891Z",
   "devdoc": {
     "kind": "dev",
     "methods": {},
