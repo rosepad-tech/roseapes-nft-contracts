@@ -16,14 +16,14 @@ module.exports = {
       port: 8545,            // Standard BSC port (default: none)
       network_id: "*",       // Any network (default: none)
     },
-    testnet: {
-      provider: () => new HDWalletProvider(privateKeys, `https://data-seed-prebsc-2-s1.binance.org:8545/`),
-      network_id: 97,
+    oasistest: {
+      provider: () => new HDWalletProvider(privateKeys, `https://testnet.emerald.oasis.dev`),
+      network_id: 42261,
       confirmations: 10,
       timeoutBlocks: 200,
       skipDryRun: true
     },
-    bsc: {
+    oasismain: {
       provider: () => new HDWalletProvider(privateKeys, `https://bsc-dataseed1.binance.org`),
       network_id: 56,
       confirmations: 10,
