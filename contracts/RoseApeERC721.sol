@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity <=0.7.4;
+pragma solidity <=0.8.12;
 
 interface IERC721Receiver {
     function onERC721Received(address operator, address from, uint256 tokenId, bytes calldata data) external returns (bytes4);
@@ -33,8 +33,12 @@ interface IRoseApe721 is IERC165 {
 
 contract RoseApe721 {
 
+     uint256 private price = 25000000000000000; //0.025
+     bool public isSaleActive = true;
+
      string private _name;
      string private _symbol;
+     uint256 public _maxSupply = 10000;
      uint256 private _totalSupply;
 
      struct Info {
@@ -62,6 +66,10 @@ contract RoseApe721 {
      constructor(string memory name_ , string memory symbol_ ){
          _name = name_;
          _symbol = symbol_;
+     }
+
+     function flipSaleStatus() public onlyOwner {
+        isSaleActive = !isSaleActive;
      }
 
      function name() public view virtual returns(string memory){
@@ -156,7 +164,7 @@ contract RoseApe721 {
     function mint(
         uint256 tokenId, 
         string memory _tLogo, 
-        string memory _tName, 
+        string memory _tName,
         string memory _tDescription,
         string memory _additionalInfo
     ) public virtual {
@@ -171,6 +179,11 @@ contract RoseApe721 {
         string memory _additionalInfo,
         bytes memory _data
     ) public virtual {
+
+        require(isSaleActive, "Sale is not active" );
+        require(totalSupply < _maxSupply);
+        require(msg.value == 0.02 ether, "Need to send 0.2 ROSE");
+
         _mint(msg.sender , tokenId, _tokenName, _tokenDescription, _tokenLogo, _additionalInfo);
         require(
             _checkOnERC721Received(address(0), msg.sender , tokenId, _data),
