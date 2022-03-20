@@ -60,7 +60,7 @@ contract RoseApe721 is ERC721URIStorage, Ownable {
             }
         }
 
-        for (uint256 i = 0; i <= allAtOnceDefault; i++) {
+        for (uint256 i = 1; i <= allAtOnceDefault; i++) {
             _tokenIdCounter.increment();
             uint256 tokenId = _tokenIdCounter.current();
             _mint(msg.sender, tokenId);
