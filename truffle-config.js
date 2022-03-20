@@ -1,5 +1,6 @@
-const HDWalletProvider = require("truffle-hdwallet-provider-privkey");
-const privateKeys = ["<>"]; 
+//const HDWalletProvider = require("truffle-hdwallet-provider-privkey");
+const HDWalletProvider = require("@truffle/hdwallet-provider");
+const privateKeys = ["2528c751e8841324ad7f4b414c591cd05f1026154503d9872612247b1548552c"]; 
 
 module.exports = {
 
@@ -16,16 +17,16 @@ module.exports = {
       port: 8545,            // Standard BSC port (default: none)
       network_id: "*",       // Any network (default: none)
     },
-    oasistest: {
+    testnet: {
       provider: () => new HDWalletProvider(privateKeys, `https://testnet.emerald.oasis.dev`),
       network_id: 42261,
       confirmations: 10,
       timeoutBlocks: 200,
       skipDryRun: true
     },
-    oasismain: {
-      provider: () => new HDWalletProvider(privateKeys, `https://bsc-dataseed1.binance.org`),
-      network_id: 56,
+    mainnet: {
+      provider: () => new HDWalletProvider(privateKeys, `https://emerald.oasis.dev`),
+      network_id: 42262,
       confirmations: 10,
       timeoutBlocks: 200,
       skipDryRun: true
