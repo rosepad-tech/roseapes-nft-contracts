@@ -5,9 +5,8 @@ import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "./ERC2981ContractWideRoyalties.sol";
-import "./RoseApeWL.sol";
 
-contract RoseApe721 is ERC721URIStorage, ERC2981ContractWideRoyalties, Ownable, RoseApeWL {
+contract RoseApe721 is ERC721URIStorage, ERC2981ContractWideRoyalties, Ownable {
     using Counters for Counters.Counter;
 
     Counters.Counter private _tokenIdCounter;
@@ -25,10 +24,11 @@ contract RoseApe721 is ERC721URIStorage, ERC2981ContractWideRoyalties, Ownable, 
     uint256 public _testPrice = 1; // for testing purposes only
 
     bool public paused = false;
-    bool public testMode = true;
+    bool public testMode = false;
 
     address public devTeam = 0x93471f86C53926B07d4554D9f186f71F283fCD24;
     string public baseURI = "ipfs://QmeRHqU4a68coNKLnnaQU9D9ogky1v9V3bN1ni9ysutaz9/";
+    string public whiteListHash = "QmSkSvMPrryhBgSDiVfH6wFs2hdLKUPJpTdAGMYWFa95x6";
     bool public revealed = false;
 
     uint256 royalty = 300;
@@ -39,10 +39,6 @@ contract RoseApe721 is ERC721URIStorage, ERC2981ContractWideRoyalties, Ownable, 
         _name = name_;
         _symbol = symbol_;
         _setRoyalties(devTeam, royalty_);
-
-        for(uint i = 0; i < addressList.length; i++) {
-            whiteListed[addressList[i]] = true;
-        }
 
     }
 
@@ -157,6 +153,15 @@ contract RoseApe721 is ERC721URIStorage, ERC2981ContractWideRoyalties, Ownable, 
 
     function whitelistUser(address _user) public onlyOwner {
         whiteListed[_user] = true;
+    }
+
+    function getWhiteListHash() public view returns (string memory) {
+        return whiteListHash;
+    }
+
+
+    function setWhiteListHash(string memory _whiteListHash) public onlyOwner {
+        whiteListHash = _whiteListHash;
     }
 
     function isUserWhiteListed(address _user) public view returns (bool) {
