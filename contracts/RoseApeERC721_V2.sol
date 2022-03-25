@@ -4,8 +4,10 @@ pragma solidity ^0.8.2;
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "./ERC2981ContractWideRoyalties.sol";
+import "./RoseApeWL.sol";
 
-contract RoseApe721 is ERC721URIStorage, Ownable {
+contract RoseApe721 is ERC721URIStorage, ERC2981ContractWideRoyalties, Ownable, RoseApeWL {
     using Counters for Counters.Counter;
 
     Counters.Counter private _tokenIdCounter;
@@ -18,22 +20,30 @@ contract RoseApe721 is ERC721URIStorage, Ownable {
     uint256 public _publicSalePrice = 150; // change later.
 
     uint256 public _whiteListMaxAllAtOnce = 3;
-    uint256 public _publicMaxAllAtOnce = 5;
+    uint256 public _publicMaxAllAtOnce = 15;
 
     uint256 public _testPrice = 1; // for testing purposes only
 
     bool public paused = false;
-    bool public testMode = false;
+    bool public testMode = true;
 
     address public devTeam = 0x93471f86C53926B07d4554D9f186f71F283fCD24;
-    string public baseURI = "ipfs://QmfJ9LuJ7YvsyHW5UR7WSpT3Tbr3z6VZicSrJLzW1kk5YY/";
+    string public baseURI = "ipfs://QmeRHqU4a68coNKLnnaQU9D9ogky1v9V3bN1ni9ysutaz9/";
     bool public revealed = false;
+
+    uint256 royalty = 300;
 
     mapping(address => bool) public whiteListed;
 
-    constructor(string memory name_ , string memory symbol_ ) ERC721(name_, symbol_) {
+    constructor(string memory name_ , string memory symbol_, uint256 royalty_) ERC721(name_, symbol_) {
         _name = name_;
         _symbol = symbol_;
+        _setRoyalties(devTeam, royalty_);
+
+        for(uint i = 0; i < addressList.length; i++) {
+            whiteListed[addressList[i]] = true;
+        }
+
     }
 
     function _baseURI() internal view override returns (string memory) {
@@ -41,23 +51,31 @@ contract RoseApe721 is ERC721URIStorage, Ownable {
     }
 
     //  Public Mint
-    function mint() public payable virtual {
+    function mint(uint256 qty) public payable virtual {
 
         uint256 allAtOnceDefault = 1;
         require(!paused);
         require(msg.value >= 0, "Not enough ROSE sent; check price!");
         require(_tokenIdCounter.current() < _maxSupply);
 
+        if(qty > 1 ) {
+            allAtOnceDefault = qty;
+        }
+        
         if(!testMode) {
             if (msg.sender != owner()) {
-                if (whiteListed[msg.sender] != true) {
+                if (whiteListed[msg.sender] == true) {
                     require(msg.value >= _whiteListSalePrice, "WL User: Not enough ROSE sent; check price!");
+                    require(msg.value >= qty * _whiteListSalePrice, "Not enough ROSE sent; check price!");
                     allAtOnceDefault = _whiteListMaxAllAtOnce;
                 } else {
                     require(msg.value >= _publicSalePrice, "Not enough ROSE sent; check price!");
+                    require(msg.value >= qty * _publicSalePrice, "Not enough ROSE sent; check price!");
                     allAtOnceDefault = _publicMaxAllAtOnce;
                 }
             }
+        } else {
+            require(qty <= 15, "Maximum of 15 NFT for testing, please try with a lower number");
         }
 
         for (uint256 i = 1; i <= allAtOnceDefault; i++) {
@@ -104,10 +122,14 @@ contract RoseApe721 is ERC721URIStorage, Ownable {
         _whiteListSalePrice = whiteListSalePrice_;
     }
 
+    function changeRoyalty(uint256 royalty_) public onlyOwner {
+        royalty = royalty_;
+        _setRoyalties(devTeam,royalty_);
+    }
+
     function changePublicSalePrice(uint256 publicSalePrice_) public onlyOwner {
         _publicSalePrice = publicSalePrice_;
     }
-
 
     function changePublicAllAtOnce(uint256 publicAllAtOnce_) public onlyOwner {
         _publicMaxAllAtOnce = publicAllAtOnce_;
@@ -137,8 +159,33 @@ contract RoseApe721 is ERC721URIStorage, Ownable {
         whiteListed[_user] = true;
     }
 
+    function isUserWhiteListed(address _user) public view returns (bool) {
+        if(whiteListed[_user]==true) {
+            return true;
+        }
+        return false;
+    }
+
     function removeWhitelistUser(address _user) public onlyOwner {
         whiteListed[_user] = false;
+    }
+
+    function supportsInterface(bytes4 interfaceId)
+        public
+        view
+        virtual
+        override(ERC721, ERC2981Base)
+        returns (bool)
+    {
+        return super.supportsInterface(interfaceId);
+    }
+
+    /// @notice Allows to set the royalties on the contract
+    /// @dev This function in a real contract should be protected with a onlyOwner (or equivalent) modifier
+    /// @param recipient the royalties recipient
+    /// @param value royalties value (between 0 and 10000)
+    function setRoyalties(address recipient, uint256 value) public onlyOwner {
+        _setRoyalties(recipient, value);
     }
 
 }
