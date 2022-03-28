@@ -15,25 +15,24 @@ contract RoseApe721 is ERC721URIStorage, ERC2981ContractWideRoyalties, Ownable {
     uint256 public _maxSupply = 5555;
     uint256 private _totalSupply;
     
-    uint256 public _whiteListSalePrice = 100; // change later.
-    uint256 public _publicSalePrice = 150; // change later.
-
-    uint256 public _whiteListMaxAllAtOnce = 3;
-    uint256 public _publicMaxAllAtOnce = 15;
-
-    uint256 public _testPrice = 1; // for testing purposes only
-
-    bool public paused = false;
-    bool public testMode = false;
-
-    address public devTeam = 0x93471f86C53926B07d4554D9f186f71F283fCD24;
-    string public baseURI = "ipfs://QmeRHqU4a68coNKLnnaQU9D9ogky1v9V3bN1ni9ysutaz9/";
-    string public whiteListHash = "QmSkSvMPrryhBgSDiVfH6wFs2hdLKUPJpTdAGMYWFa95x6";
-    bool public revealed = false;
-
+    uint256 public _whitelistSalePrice = 100 ether; // change later.
+    uint256 public _publicSalePrice = 150 ether; // change later.
     uint256 royalty = 300;
 
-    mapping(address => bool) public whiteListed;
+    uint256 public _whitelistOwnershipLimit = 3;
+    uint256 public _publicOwnershipLimit = 15;
+
+    uint256 public _testPrice = 1; // for testing purposes only
+    bool public testMode = false;
+    bool public paused = false;
+    bool public whitelistMode = true;
+    bool public revealed = false;
+
+    address public devTeam = 0x4A7cf0919703CA8d392241B7917d524536bAb143;
+    string public baseURI = "ipfs://QmeRHqU4a68coNKLnnaQU9D9ogky1v9V3bN1ni9ysutaz9/";
+
+    mapping(address => bool) public whitelisted;
+    mapping(address => uint256[]) public userOwnedTokens;
 
     constructor(string memory name_ , string memory symbol_, uint256 royalty_) ERC721(name_, symbol_) {
         _name = name_;
@@ -49,34 +48,33 @@ contract RoseApe721 is ERC721URIStorage, ERC2981ContractWideRoyalties, Ownable {
     //  Public Mint
     function mint(uint256 qty) public payable virtual {
 
-        uint256 allAtOnceDefault = 1;
         require(!paused);
         require(msg.value >= 0, "Not enough ROSE sent; check price!");
         require(_tokenIdCounter.current() < _maxSupply);
 
-        if(qty > 1 ) {
-            allAtOnceDefault = qty;
-        }
-        
-        if(!testMode) {
-            if (msg.sender != owner()) {
-                if (whiteListed[msg.sender] == true) {
-                    require(msg.value >= _whiteListSalePrice, "WL User: Not enough ROSE sent; check price!");
-                    require(msg.value >= qty * _whiteListSalePrice, "Not enough ROSE sent; check price!");
-                    allAtOnceDefault = _whiteListMaxAllAtOnce;
-                } else {
-                    require(msg.value >= _publicSalePrice, "Not enough ROSE sent; check price!");
-                    require(msg.value >= qty * _publicSalePrice, "Not enough ROSE sent; check price!");
-                    allAtOnceDefault = _publicMaxAllAtOnce;
-                }
+        //  Whitelist mode. We will have a whitelist event. 
+        if(whitelistMode) { 
+            require(whitelisted[msg.sender], "Only whitelist participants are allowed during whitelist sale.");
+            if (whitelisted[msg.sender] == true) {
+                uint256 requiredAmount = qty * _whitelistSalePrice;
+                uint256 arrayLength = userOwnedTokens[msg.sender].length;
+                uint256 toBeTotal = arrayLength + qty;
+                require(toBeTotal < (_whitelistOwnershipLimit + 1), "Maximum Holding for WL Event"); // only 3 allowed!
+                require(msg.value >= requiredAmount, "Not enough ROSE sent; check price!");
             }
         } else {
-            require(qty <= 15, "Maximum of 15 NFT for testing, please try with a lower number");
+            uint256 requiredAmount = qty * _publicSalePrice;
+            uint256 arrayLength = userOwnedTokens[msg.sender].length;
+            uint256 toBeTotal = arrayLength + qty;
+            require(toBeTotal < (_publicOwnershipLimit + 1), "Maximum Holding for Public Event"); // only 15 allowed!
+            require(msg.value >= requiredAmount, "Not enough ROSE sent; check price!");
         }
 
-        for (uint256 i = 1; i <= allAtOnceDefault; i++) {
+        //  Mint
+        for (uint256 i = 1; i <= qty; i++) {
             _tokenIdCounter.increment();
             uint256 tokenId = _tokenIdCounter.current();
+            userOwnedTokens[msg.sender].push(tokenId);
             _mint(msg.sender, tokenId);
         }
     }
@@ -114,8 +112,16 @@ contract RoseApe721 is ERC721URIStorage, ERC2981ContractWideRoyalties, Ownable {
         baseURI = baseURI_;
     }
 
-    function changeWhiteListSalePrice(uint256 whiteListSalePrice_) public onlyOwner {
-        _whiteListSalePrice = whiteListSalePrice_;
+    function changeWhitelistSalePrice(uint256 whitelistSalePrice_) public onlyOwner {
+        _whitelistSalePrice = whitelistSalePrice_;
+    }
+
+    function changePublicSalePrice(uint256 publicSalePrice_) public onlyOwner {
+        _publicSalePrice = publicSalePrice_;
+    }
+
+    function changePublicOwnershipLimit(uint256 publicOwnershipLimit_) public onlyOwner {
+        _publicOwnershipLimit = publicOwnershipLimit_;
     }
 
     function changeRoyalty(uint256 royalty_) public onlyOwner {
@@ -123,16 +129,8 @@ contract RoseApe721 is ERC721URIStorage, ERC2981ContractWideRoyalties, Ownable {
         _setRoyalties(devTeam,royalty_);
     }
 
-    function changePublicSalePrice(uint256 publicSalePrice_) public onlyOwner {
-        _publicSalePrice = publicSalePrice_;
-    }
-
-    function changePublicAllAtOnce(uint256 publicAllAtOnce_) public onlyOwner {
-        _publicMaxAllAtOnce = publicAllAtOnce_;
-    }
-
-    function changeWhiteListAllAtOnce(uint256 publicAllAtOnce_) public onlyOwner {
-        _whiteListMaxAllAtOnce = publicAllAtOnce_;
+    function changeWhitelistOwnershipLimit(uint256 whitelistOwnershipLimit_) public onlyOwner {
+        _whitelistOwnershipLimit = whitelistOwnershipLimit_;
     }
 
     function changeDevTeam(address devTeam_) public onlyOwner {
@@ -151,28 +149,36 @@ contract RoseApe721 is ERC721URIStorage, ERC2981ContractWideRoyalties, Ownable {
         testMode = _testMode;
     }
 
+    //  whitelist functions
+
+    function changeWhitelistMode(bool _whitelistMode) public onlyOwner {
+        whitelistMode = _whitelistMode;
+    }
+
+
     function whitelistUser(address _user) public onlyOwner {
-        whiteListed[_user] = true;
+        whitelisted[_user] = true;
     }
 
-    function getWhiteListHash() public view returns (string memory) {
-        return whiteListHash;
-    }
-
-
-    function setWhiteListHash(string memory _whiteListHash) public onlyOwner {
-        whiteListHash = _whiteListHash;
-    }
-
-    function isUserWhiteListed(address _user) public view returns (bool) {
-        if(whiteListed[_user]==true) {
+    function isUserWhitelisted(address _user) public view returns (bool) {
+        if(whitelisted[_user]==true) {
             return true;
         }
         return false;
     }
 
-    function removeWhitelistUser(address _user) public onlyOwner {
-        whiteListed[_user] = false;
+    function setWhitelist(address[] calldata _users) public onlyOwner {
+        for (uint i = 0; i < _users.length; i++) {
+            whitelisted[_users[i]] = true;
+        }
+    }
+
+    function removeWhiteListUser(address _user) public onlyOwner {
+        whitelisted[_user] = false;
+    }
+
+    function getNumberOfTokens(address _user) public view returns(uint256) {
+        return userOwnedTokens[_user].length;
     }
 
     function supportsInterface(bytes4 interfaceId)
