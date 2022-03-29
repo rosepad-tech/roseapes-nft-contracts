@@ -2,11 +2,12 @@
 pragma solidity ^0.8.2;
 
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "./ERC2981ContractWideRoyalties.sol";
 
-contract RoseApe721 is ERC721URIStorage, ERC2981ContractWideRoyalties, Ownable {
+contract RoseApe721 is ERC721URIStorage, ERC721Enumerable, ERC2981ContractWideRoyalties, Ownable {
     using Counters for Counters.Counter;
 
     Counters.Counter private _tokenIdCounter;
@@ -26,13 +27,15 @@ contract RoseApe721 is ERC721URIStorage, ERC2981ContractWideRoyalties, Ownable {
     bool public testMode = false;
     bool public paused = false;
     bool public whitelistMode = true;
+    bool public whitelistCheck = false;
     bool public revealed = false;
 
     address public devTeam = 0x4A7cf0919703CA8d392241B7917d524536bAb143;
     string public baseURI = "ipfs://QmeRHqU4a68coNKLnnaQU9D9ogky1v9V3bN1ni9ysutaz9/";
 
     mapping(address => bool) public whitelisted;
-    mapping(address => uint256[]) public userOwnedTokens;
+    mapping(address => uint256[]) public userOwnedTokensWhitelist;
+    mapping(address => uint256[]) public userOwnedTokensPublic;
 
     constructor(string memory name_ , string memory symbol_, uint256 royalty_) ERC721(name_, symbol_) {
         _name = name_;
@@ -40,6 +43,7 @@ contract RoseApe721 is ERC721URIStorage, ERC2981ContractWideRoyalties, Ownable {
         _setRoyalties(devTeam, royalty_);
 
     }
+
 
     function _baseURI() internal view override returns (string memory) {
         return baseURI;
@@ -54,28 +58,37 @@ contract RoseApe721 is ERC721URIStorage, ERC2981ContractWideRoyalties, Ownable {
 
         //  Whitelist mode. We will have a whitelist event. 
         if(whitelistMode) { 
-            require(whitelisted[msg.sender], "Only whitelist participants are allowed during whitelist sale.");
-            if (whitelisted[msg.sender] == true) {
-                uint256 requiredAmount = qty * _whitelistSalePrice;
-                uint256 arrayLength = userOwnedTokens[msg.sender].length;
-                uint256 toBeTotal = arrayLength + qty;
-                require(toBeTotal < (_whitelistOwnershipLimit + 1), "Maximum Holding for WL Event"); // only 3 allowed!
-                require(msg.value >= requiredAmount, "Not enough ROSE sent; check price!");
+            if(whitelistCheck) {
+                require(whitelisted[msg.sender], "Only whitelist participants are allowed during whitelist sale.");
+            } 
+            uint256 requiredAmount = qty * _whitelistSalePrice;
+            uint256 arrayLength = userOwnedTokensWhitelist[msg.sender].length;
+            uint256 toBeTotal = arrayLength + qty;
+            require(toBeTotal < (_whitelistOwnershipLimit + 1), "Maximum Holding for WL Event"); // only 3 allowed!
+            require(msg.value >= requiredAmount, "Not enough ROSE sent; check price!");
+
+            //  Mint for whitelist
+            for (uint256 i = 1; i <= qty; i++) {
+                _tokenIdCounter.increment();
+                uint256 tokenId = _tokenIdCounter.current();
+                userOwnedTokensWhitelist[msg.sender].push(tokenId);
+                _mint(msg.sender, tokenId);
             }
+
         } else {
             uint256 requiredAmount = qty * _publicSalePrice;
-            uint256 arrayLength = userOwnedTokens[msg.sender].length;
+            uint256 arrayLength = userOwnedTokensPublic[msg.sender].length;
             uint256 toBeTotal = arrayLength + qty;
             require(toBeTotal < (_publicOwnershipLimit + 1), "Maximum Holding for Public Event"); // only 15 allowed!
             require(msg.value >= requiredAmount, "Not enough ROSE sent; check price!");
-        }
 
-        //  Mint
-        for (uint256 i = 1; i <= qty; i++) {
-            _tokenIdCounter.increment();
-            uint256 tokenId = _tokenIdCounter.current();
-            userOwnedTokens[msg.sender].push(tokenId);
-            _mint(msg.sender, tokenId);
+            //  Mint for public
+            for (uint256 i = 1; i <= qty; i++) {
+                _tokenIdCounter.increment();
+                uint256 tokenId = _tokenIdCounter.current();
+                userOwnedTokensPublic[msg.sender].push(tokenId);
+                _mint(msg.sender, tokenId);
+            }
         }
     }
 
@@ -90,7 +103,7 @@ contract RoseApe721 is ERC721URIStorage, ERC2981ContractWideRoyalties, Ownable {
     }
 
     //  Set the TOKEN URI
-    function tokenURI(uint256 tokenId) public view override returns (string memory) {
+    function tokenURI(uint256 tokenId) public view override(ERC721,ERC721URIStorage) returns (string memory) {
         require(_exists(tokenId), "ERC721Metadata: URI query for nonexistent token");
 
         string memory baseURI_ = _baseURI();
@@ -141,6 +154,10 @@ contract RoseApe721 is ERC721URIStorage, ERC2981ContractWideRoyalties, Ownable {
         revealed = _revealed;
     }
 
+    function changeWhitelistCheck(bool _whitelistCheck) public onlyOwner {
+        whitelistCheck = _whitelistCheck;
+    }
+
     function pause(bool _state) public onlyOwner {
         paused = _state;
     }
@@ -178,17 +195,28 @@ contract RoseApe721 is ERC721URIStorage, ERC2981ContractWideRoyalties, Ownable {
     }
 
     function getNumberOfTokens(address _user) public view returns(uint256) {
-        return userOwnedTokens[_user].length;
+        return (userOwnedTokensWhitelist[_user].length + userOwnedTokensPublic[_user].length);
     }
 
     function supportsInterface(bytes4 interfaceId)
         public
         view
         virtual
-        override(ERC721, ERC2981Base)
+        override(ERC721, ERC721Enumerable, ERC2981Base)
         returns (bool)
     {
         return super.supportsInterface(interfaceId);
+    }
+
+    function _beforeTokenTransfer(address from, address to, uint256 tokenId)
+        internal
+        override(ERC721, ERC721Enumerable)
+    {
+        super._beforeTokenTransfer(from, to, tokenId);
+    }
+
+    function _burn(uint256 tokenId) internal override(ERC721, ERC721URIStorage) {
+        super._burn(tokenId);
     }
 
     /// @notice Allows to set the royalties on the contract
